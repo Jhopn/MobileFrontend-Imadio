@@ -1,74 +1,159 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Platform,
+  Dimensions,
+} from 'react-native';
+import {
+  Info,
+  RefreshCcw,
+  Clock,
+  Settings,
+} from 'react-native-feather';
+import * as ImagePicker from 'expo-image-picker';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const { width } = Dimensions.get('window');
 
-export default function HomeScreen() {
+const HomeScreen = () => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
+  const handleConvert = () => {
+    console.log('Converting image to audio...');
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.infoButton}>
+          <Info width={24} height={24} color="#000" />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Início</Text>
+          <Text style={styles.subtitle}>Converta a imagem em audio</Text>
+        </View>
+      </View>
+
+      <View style={styles.content}>
+        <View style={[styles.imagePlaceholder, selectedImage && styles.imageSelected]}>
+          {/* Image preview would go here */}
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={pickImage}>
+          <Text style={styles.buttonText}>Escolher Imagem</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, !selectedImage && styles.buttonDisabled]} 
+          onPress={handleConvert}
+          disabled={!selectedImage}
+        >
+          <Text style={[styles.buttonText, !selectedImage && styles.buttonTextDisabled]}>
+            Converter
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#e8e6ff',
+  },
+  header: {
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  infoButton: {
+    padding: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  titleContainer: {
+    marginLeft: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 4,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 24,
+  },
+  imagePlaceholder: {
+    width: width - 48,
+    height: width - 48,
+    backgroundColor: '#333',
+    borderRadius: 20,
+    marginBottom: 32,
+  },
+  imageSelected: {
+    borderWidth: 2,
+    borderColor: '#9f90ff',
+  },
+  button: {
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    width: '100%',
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  buttonTextDisabled: {
+    color: '#666',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 16,
+    backgroundColor: '#9f90ff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navText: {
+    marginTop: 4,
+    fontSize: 12,
   },
 });
+
+export default HomeScreen;
