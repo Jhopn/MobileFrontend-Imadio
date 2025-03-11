@@ -15,7 +15,7 @@ const { width } = Dimensions.get('window');
 interface ColorScheme {
   id: string;
   colors: string[];
-  name: string; // Adicionado para acessibilidade
+  name: string; 
 }
 
 const colorSchemes: ColorScheme[] = [

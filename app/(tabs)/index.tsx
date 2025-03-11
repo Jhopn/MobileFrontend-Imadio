@@ -5,23 +5,24 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Image,
   Platform,
-  Dimensions,
 } from 'react-native';
-import {
-  Info,
-  RefreshCcw,
-  Clock,
-  Settings,
-} from 'react-native-feather';
+import { Info } from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
 
-const { width } = Dimensions.get('window');
-
-const HomeScreen = () => {
+const HomeScreen: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const pickImage = async () => {
+    // Request permissions first
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      alert('É necessário permissão para acessar a galeria de imagens');
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -35,42 +36,71 @@ const HomeScreen = () => {
   };
 
   const handleConvert = () => {
+    if (!selectedImage) {
+      alert('Por favor, selecione uma imagem primeiro');
+      return;
+    }
     console.log('Converting image to audio...');
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.infoButton}>
+        <TouchableOpacity 
+          style={styles.infoButton}
+          accessibilityRole="button"
+          accessibilityLabel="Informações"
+          accessibilityHint="Toque para ver informações sobre o aplicativo"
+        >
           <Info width={24} height={24} color="#000" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Início</Text>
+          <Text style={styles.title} accessibilityRole="header">Início</Text>
           <Text style={styles.subtitle}>Converta a imagem em audio</Text>
         </View>
       </View>
 
       <View style={styles.content}>
-        <View style={[styles.imagePlaceholder, selectedImage && styles.imageSelected]}>
-          {/* Image preview would go here */}
+        <View 
+          style={styles.imageContainer}
+          accessibilityRole="image"
+          accessibilityLabel={selectedImage ? "Imagem selecionada" : "Área para selecionar imagem"}
+        >
+          {selectedImage ? (
+            <Image
+              source={{ uri: selectedImage }}
+              style={styles.selectedImage}
+              accessibilityLabel="Imagem selecionada para conversão"
+            />
+          ) : (
+            <View style={styles.placeholderImage} />
+          )}
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={pickImage}
+          accessibilityRole="button"
+          accessibilityLabel="Escolher Imagem"
+          accessibilityHint="Toque para selecionar uma imagem da galeria"
+        >
           <Text style={styles.buttonText}>Escolher Imagem</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={[styles.button, !selectedImage && styles.buttonDisabled]} 
+          style={[styles.button, !selectedImage && styles.buttonDisabled]}
           onPress={handleConvert}
           disabled={!selectedImage}
+          accessibilityRole="button"
+          accessibilityLabel="Converter"
+          accessibilityHint="Toque para converter a imagem selecionada em áudio"
+          accessibilityState={{ disabled: !selectedImage }}
         >
           <Text style={[styles.buttonText, !selectedImage && styles.buttonTextDisabled]}>
             Converter
           </Text>
         </TouchableOpacity>
       </View>
-
-
     </SafeAreaView>
   );
 };
@@ -106,21 +136,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
   },
-  imagePlaceholder: {
-    width: width - 48,
-    height: width - 48,
+  imageContainer: {
+    width: '100%',
+    aspectRatio: 1,
+    maxWidth: 400,
+    borderRadius: 24,
+    overflow: 'hidden',
     backgroundColor: '#333',
-    borderRadius: 20,
     marginBottom: 32,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
-  imageSelected: {
-    borderWidth: 2,
-    borderColor: '#9f90ff',
+  selectedImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  placeholderImage: {
+    flex: 1,
+    backgroundColor: '#333',
   },
   button: {
     backgroundColor: '#fff',
     borderRadius: 30,
     width: '100%',
+    maxWidth: 400,
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -138,21 +187,6 @@ const styles = StyleSheet.create({
   },
   buttonTextDisabled: {
     color: '#666',
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 16,
-    backgroundColor: '#9f90ff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    marginTop: 4,
-    fontSize: 12,
   },
 });
 

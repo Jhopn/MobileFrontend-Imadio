@@ -44,11 +44,11 @@ const historyData: HistoryItem[] = [
 // Atualize o componente HistoryItem para usar a interface
 const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => (
   <View style={styles.historyItem}>
-    {/* <Image
+    <Image
       source={{ uri: item.imageUrl }}
       style={styles.thumbnail}
-      defaultSource={require('./assets/placeholder.png')} // Adicione uma imagem de placeholder
-    /> */}
+      defaultSource={require('../../assets/images/favicon.png')} // Adicione uma imagem de placeholder
+    />
     <View style={styles.itemContent}>
       <Text style={styles.date}>{item.date}</Text>
       <Text style={styles.description}>{item.description}</Text>
