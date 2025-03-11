@@ -1,113 +1,99 @@
-import React, { useState } from 'react';
+// ConfigurationScreen.tsx
+import React from 'react';
 import {
   View,
   Text,
+  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
-  Dimensions,
-  AccessibilityInfo,
+  ScrollView,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
-
-const { width } = Dimensions.get('window');
+import { useTheme } from '@/hooks/useTheme';  
 
 interface ColorScheme {
   id: string;
-  colors: string[];
-  name: string; 
+  colors: {
+    background: string;
+    text: string;
+    primary: string;
+  };
+  name: string;
 }
 
 const colorSchemes: ColorScheme[] = [
   {
     id: '1',
-    colors: ['#000000', '#FFFFFF', '#DAA520'],
-    name: 'Preto, Branco e Dourado',
+    colors: { background: '#e8e6ff', text: '#000000', primary: '#9f90ff' },
+    name: 'Padrão',
   },
   {
     id: '2',
-    colors: ['#000000', '#E0E0E0', '#008B8B'],
-    name: 'Preto, Cinza e Azul-petróleo',
+    colors: { background: '#ffffff', text: '#000000', primary: '#4a90e2' },
+    name: 'Claro',
   },
   {
     id: '3',
-    colors: ['#000000', '#FFFFFF', '#FF4500'],
-    name: 'Preto, Branco e Laranja',
+    colors: { background: '#121212', text: '#ffffff', primary: '#bb86fc' },
+    name: 'Escuro',
   },
 ];
 
 const ConfigurationScreen: React.FC = () => {
-  const [fontSize, setFontSize] = useState<number>(16);
-  const [selectedScheme, setSelectedScheme] = useState<string>('1');
+  const { colors, fontSize, setColors, setFontSize } = useTheme();
 
   const handleSaveChanges = () => {
-    console.log('Saving changes:', { fontSize, selectedScheme });
-    AccessibilityInfo.announceForAccessibility('Configurações salvas com sucesso');
+    console.log('Configurações salvas');
+    // Aqui você pode adicionar lógica para salvar as configurações permanentemente
   };
 
   const ColorSchemeOption: React.FC<{ scheme: ColorScheme }> = ({ scheme }) => (
     <TouchableOpacity
-      style={styles.colorSchemeRow}
-      onPress={() => setSelectedScheme(scheme.id)}
+      style={[styles.colorSchemeRow, { backgroundColor: scheme.colors.background }]}
+      onPress={() => setColors(scheme.colors)}
       accessibilityRole="radio"
-      accessibilityState={{ checked: selectedScheme === scheme.id }}
+      accessibilityState={{ checked: colors === scheme.colors }}
       accessibilityLabel={`Esquema de cores ${scheme.name}`}
     >
-      <View style={styles.radioContainer}>
-        <View
-          style={[
-            styles.radioOuter,
-            selectedScheme === scheme.id && styles.radioOuterSelected,
-          ]}
-        >
-          {selectedScheme === scheme.id && <View style={styles.radioInner} />}
-        </View>
-      </View>
-      <View style={styles.colorContainer}>
-        {scheme.colors.map((color, index) => (
-          <View
-            key={index}
-            style={[styles.colorSquare, { backgroundColor: color }]}
-            accessibilityLabel={`Cor ${index + 1}: ${color}`}
-          />
-        ))}
-      </View>
+      <View style={[styles.colorSquare, { backgroundColor: scheme.colors.primary }]} />
+      <Text style={[styles.schemeText, { color: scheme.colors.text }]}>{scheme.name}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title} accessibilityRole="header">Configuração</Text>
-        <Text style={styles.subtitle}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={[styles.title, { color: colors.text, fontSize: fontSize * 1.5 }]}>
+          Configuração
+        </Text>
+        <Text style={[styles.subtitle, { color: colors.text, fontSize: fontSize }]}>
           Altere as cores e os tamanhos da fonte para melhorar sua experiência com o aplicativo
         </Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle} accessibilityRole="header">Altere o tamanho da fonte</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text, fontSize: fontSize * 1.2 }]}>
+            Altere o tamanho da fonte
+          </Text>
           <View style={styles.sliderContainer}>
-            <Text style={styles.sliderLabel}>min</Text>
+            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>min</Text>
             <Slider
               style={styles.slider}
               minimumValue={12}
               maximumValue={24}
               value={fontSize}
-              onValueChange={(value) => {
-                setFontSize(value);
-                AccessibilityInfo.announceForAccessibility(`Tamanho da fonte alterado para ${Math.round(value)}`);
-              }}
-              minimumTrackTintColor="#000"
-              maximumTrackTintColor="#000"
-              thumbTintColor="#000"
-              accessibilityLabel="Ajustar tamanho da fonte"
-              accessibilityHint="Deslize para a direita para aumentar, para a esquerda para diminuir"
+              onValueChange={setFontSize}
+              minimumTrackTintColor={colors.primary}
+              maximumTrackTintColor={colors.text}
+              thumbTintColor={colors.primary}
             />
-            <Text style={styles.sliderLabel}>max</Text>
+            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>max</Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle} accessibilityRole="header">Altere as cores</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text, fontSize: fontSize * 1.2 }]}>
+            Altere as cores
+          </Text>
           <View style={styles.colorSchemesContainer}>
             {colorSchemes.map((scheme) => (
               <ColorSchemeOption key={scheme.id} scheme={scheme} />
@@ -115,16 +101,18 @@ const ConfigurationScreen: React.FC = () => {
           </View>
         </View>
 
-        <TouchableOpacity 
-          style={styles.saveButton} 
+        <TouchableOpacity
+          style={[styles.saveButton, { backgroundColor: colors.primary }]}
           onPress={handleSaveChanges}
           accessibilityRole="button"
           accessibilityLabel="Salvar Mudanças"
           accessibilityHint="Toque duas vezes para salvar as configurações"
         >
-          <Text style={styles.saveButtonText}>Salvar Mudanças</Text>
+          <Text style={[styles.saveButtonText, { color: colors.background, fontSize: fontSize * 1.2 }]}>
+            Salvar Mudanças
+          </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -132,102 +120,66 @@ const ConfigurationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8e6ff',
   },
   content: {
-    flex: 1,
     padding: 24,
-    paddingTop: 48,
   },
   title: {
-    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
     textAlign: 'center',
-    color: '#666',
-    marginBottom: 40,
-    paddingHorizontal: 20,
+    marginBottom: 24,
   },
   section: {
-    marginBottom: 40,
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   sliderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   slider: {
     flex: 1,
-    height: 40,
-    marginHorizontal: 10,
+    marginHorizontal: 16,
   },
   sliderLabel: {
-    fontSize: 16,
     fontWeight: 'bold',
   },
   colorSchemesContainer: {
-    backgroundColor: '#f0f0ff',
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   colorSchemeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingVertical: 8,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
-  radioContainer: {
-    marginRight: 16,
-  },
-  radioOuter: {
+  colorSquare: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: 16,
   },
-  radioOuterSelected: {
-    borderColor: '#000',
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#000',
-  },
-  colorContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  colorSquare: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#000',
+  schemeText: {
+    flex: 1,
   },
   saveButton: {
-    backgroundColor: '#fff',
     borderRadius: 30,
-    borderWidth: 2,
-    borderColor: '#000',
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 'auto',
+    justifyContent: 'center',
+    marginTop: 24,
   },
   saveButtonText: {
-    fontSize: 18,
     fontWeight: 'bold',
   },
 });

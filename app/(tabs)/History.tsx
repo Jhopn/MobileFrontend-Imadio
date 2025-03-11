@@ -8,6 +8,8 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const { width } = Dimensions.get('window');
 
@@ -19,13 +21,13 @@ interface HistoryItem {
   imageUrl: string;
 }
 
-// Atualize o tipo dos dados de exemplo
+// Dados de exemplo
 const historyData: HistoryItem[] = [
   {
     id: '1',
     date: '01/12/2024',
     description: 'Há um teclado de computador e um mouse em uma mesa',
-    imageUrl: 'https://example.com/keyboard-image.jpg', // Substitua pela URL real da imagem
+    imageUrl: 'https://example.com/keyboard-image.jpg',
   },
   {
     id: '2',
@@ -41,27 +43,34 @@ const historyData: HistoryItem[] = [
   },
 ];
 
-// Atualize o componente HistoryItem para usar a interface
-const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => (
-  <View style={styles.historyItem}>
-    <Image
-      source={{ uri: item.imageUrl }}
-      style={styles.thumbnail}
-      defaultSource={require('../../assets/images/favicon.png')} // Adicione uma imagem de placeholder
-    />
-    <View style={styles.itemContent}>
-      <Text style={styles.date}>{item.date}</Text>
-      <Text style={styles.description}>{item.description}</Text>
+const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => {
+  const { colors, fontSize } = useTheme();
+
+  return (
+    <View style={[styles.historyItem, { backgroundColor: colors.background, borderColor: colors.primary }]}>
+      <Image
+        source={{ uri: item.imageUrl }}
+        style={styles.thumbnail}
+        defaultSource={require('../../assets/images/favicon.png')}
+      />
+      <View style={styles.itemContent}>
+        <Text style={[styles.date, { color: colors.text, fontSize: RFValue(fontSize - 10) }]}>{item.date}</Text>
+        <Text style={[styles.description, { color: colors.text, fontSize: RFValue(fontSize - 5)}]}>
+          {item.description}
+        </Text>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const HistoryScreen: React.FC = () => {
+  const { colors, fontSize } = useTheme(); // Obtém o tema global
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Histórico</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}>Histórico</Text>
+        <Text style={[styles.subtitle, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}>
           Aqui você encontrará as imagens que já foram convertidas
         </Text>
       </View>
@@ -80,42 +89,33 @@ const HistoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8e6ff',
   },
   header: {
     padding: 24,
     paddingTop: 48,
   },
   title: {
-    fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
     textAlign: 'center',
-    color: '#666',
     paddingHorizontal: 20,
   },
   listContent: {
     padding: 16,
-    paddingBottom: 100, // Extra padding for bottom tab bar
+    paddingBottom: 100,
   },
   historyItem: {
-    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#000',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -131,12 +131,9 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   date: {
-    fontSize: 14,
-    color: '#666',
     marginBottom: 4,
   },
   description: {
-    fontSize: 16,
     lineHeight: 22,
   },
 });
