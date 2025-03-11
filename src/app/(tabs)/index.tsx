@@ -12,7 +12,7 @@ import {
 import { Info } from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/src/hooks/useTheme';
 
 const HomeScreen: React.FC = () => {
   const { colors, fontSize } = useTheme();

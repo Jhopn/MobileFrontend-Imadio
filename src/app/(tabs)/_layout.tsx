@@ -2,9 +2,9 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 import { RefreshCcw, Clock, Settings } from 'react-native-feather';
-import { HapticTab } from '@/components/HapticTab';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { useTheme } from '@/hooks/useTheme';
+import { HapticTab } from '@/src/components/HapticTab';
+import TabBarBackground from '@/src/components/ui/TabBarBackground';
+import { useTheme } from '@/src/hooks/useTheme';
 
 
 export default function TabLayout() {

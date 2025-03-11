@@ -8,7 +8,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/src/hooks/useTheme';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const { width } = Dimensions.get('window');

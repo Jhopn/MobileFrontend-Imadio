@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { useTheme } from '@/hooks/useTheme';  
+import { useTheme } from '@/src/hooks/useTheme';  
 
 interface ColorScheme {
   id: string;
