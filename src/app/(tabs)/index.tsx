@@ -13,13 +13,21 @@ import { Info } from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from '@/src/hooks/useTheme';
+import { AudioDescriptionModal } from '@/src/components/modal/audio-description';
 
 const HomeScreen: React.FC = () => {
   const { colors, fontSize } = useTheme();
+  const [showAudioModal, setShowAudioModal] = useState(false);
+  const [audioDescription, setAudioDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { width, height } = useWindowDimensions();
 
   const isLandscape = width > height;
+
+  const handleConversion = (description: string) => {
+    setAudioDescription(description);
+    setShowAudioModal(true);
+  };
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -108,6 +116,11 @@ const HomeScreen: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        <AudioDescriptionModal
+        visible={showAudioModal}
+        description={audioDescription}
+        onClose={() => setShowAudioModal(false)}
+      />
       </View>
     </SafeAreaView>
   );

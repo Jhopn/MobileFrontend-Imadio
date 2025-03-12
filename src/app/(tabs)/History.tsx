@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,11 @@ import {
   SafeAreaView,
   FlatList,
   Dimensions,
+  TouchableOpacity, // Adicione esta importação
 } from 'react-native';
 import { useTheme } from '@/src/hooks/useTheme';
 import { RFValue } from 'react-native-responsive-fontsize';
+import HistoryItemModal from '@/src/components/modal/conversion-history';
 
 const { width } = Dimensions.get('window');
 
@@ -43,60 +45,77 @@ const historyData: HistoryItem[] = [
   },
 ];
 
-const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => {
+// Modificado para receber a função onPress
+const HistoryItem: React.FC<{ 
+  item: HistoryItem; 
+  onPress: (item: HistoryItem) => void; // Nova prop
+}> = ({ item, onPress }) => {
   const { colors, fontSize } = useTheme();
 
   return (
-    <View
+    <TouchableOpacity
       style={[styles.historyItem, { backgroundColor: colors.background, borderColor: colors.primary }]}
-      accessible={true} // Torna o item acessível
-      accessibilityRole="button" // Define o papel de interação
+      accessible={true}
+      accessibilityRole="button"
       accessibilityLabel={`Histórico do dia ${item.date}`}
-      accessibilityHint={`Descrição: ${item.description}`}
+      accessibilityHint={`Toque para ver detalhes. Descrição: ${item.description}`}
+      onPress={() => onPress(item)} // Chama a função onPress com o item
     >
       <Image
         source={{ uri: item.imageUrl }}
         style={styles.thumbnail}
         defaultSource={require('../../assets/images/favicon.png')}
-        accessible={true} // Torna a imagem acessível
+        accessible={true}
         accessibilityLabel={`Imagem relacionada à descrição: ${item.description}`}
       />
       <View style={styles.itemContent}>
         <Text
           style={[styles.date, { color: colors.text, fontSize: RFValue(fontSize - 10) }]}
-          accessible={true} // Torna o texto acessível
-          accessibilityRole="text" // Define que o item é um texto
+          accessible={true}
+          accessibilityRole="text"
         >
           {item.date}
         </Text>
         <Text
           style={[styles.description, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
-          accessible={true} // Torna o texto acessível
+          accessible={true}
           accessibilityRole="text"
         >
           {item.description}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const HistoryScreen: React.FC = () => {
-  const { colors, fontSize } = useTheme(); // Obtém o tema global
+  const { colors, fontSize } = useTheme(); 
+  const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleItemPress = (item: HistoryItem) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedItem(null);
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Text
           style={[styles.title, { color: colors.text, fontSize: RFValue(fontSize) }]}
-          accessible={true} // Torna o título acessível
-          accessibilityRole="header" // Define o papel de cabeçalho
+          accessible={true}
+          accessibilityRole="header"
         >
           Histórico
         </Text>
         <Text
           style={[styles.subtitle, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
-          accessible={true} // Torna o subtítulo acessível
+          accessible={true}
           accessibilityRole="text"
         >
           Aqui você encontrará as imagens que já foram convertidas
@@ -105,12 +124,23 @@ const HistoryScreen: React.FC = () => {
 
       <FlatList<HistoryItem>
         data={historyData}
-        renderItem={({ item }) => <HistoryItem item={item} />}
+        renderItem={({ item }) => (
+          <HistoryItem 
+            item={item} 
+            onPress={handleItemPress} // Passa a função handleItemPress
+          />
+        )}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         accessibilityLabel="Lista de histórico de imagens"
-        accessible={true} // Torna a lista acessível
+        accessible={true}
+      />
+
+      <HistoryItemModal
+        visible={modalVisible}
+        item={selectedItem}
+        onClose={handleCloseModal}
       />
     </SafeAreaView>
   );

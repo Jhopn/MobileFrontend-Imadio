@@ -1,5 +1,5 @@
 // ConfigurationScreen.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTheme } from '@/src/hooks/useTheme';  
+import { ConfirmationModal } from '@/src/components/modal/confirmation';
 
 interface ColorScheme {
   id: string;
@@ -40,11 +41,20 @@ const colorSchemes: ColorScheme[] = [
 ];
 
 const ConfigurationScreen: React.FC = () => {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  
   const { colors, fontSize, setColors, setFontSize } = useTheme();
 
+  const handleConfirmSave = () => {
+    // Lógica para salvar as alterações permanentemente
+    console.log('Configurações salvas permanentemente');
+    // Aqui você pode adicionar código para salvar em AsyncStorage ou outra forma de persistência
+    setShowConfirmModal(false);
+  };
+
   const handleSaveChanges = () => {
-    console.log('Configurações salvas');
-    // Aqui você pode adicionar lógica para salvar as configurações permanentemente
+    // Abrir o modal de confirmação em vez de salvar diretamente
+    setShowConfirmModal(true);
   };
 
   const ColorSchemeOption: React.FC<{ scheme: ColorScheme }> = ({ scheme }) => (
@@ -103,16 +113,22 @@ const ConfigurationScreen: React.FC = () => {
 
         <TouchableOpacity
           style={[styles.saveButton, { backgroundColor: colors.primary }]}
-          onPress={handleSaveChanges}
+          onPress={handleSaveChanges} // Esta função agora abrirá o modal
           accessibilityRole="button"
           accessibilityLabel="Salvar Mudanças"
-          accessibilityHint="Toque duas vezes para salvar as configurações"
+          accessibilityHint="Toque duas vezes para confirmar as configurações"
         >
           <Text style={[styles.saveButtonText, { color: colors.background, fontSize: fontSize * 1.2 }]}>
             Salvar Mudanças
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <ConfirmationModal
+        visible={showConfirmModal}
+        onConfirm={handleConfirmSave}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </SafeAreaView>
   );
 };
