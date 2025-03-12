@@ -6,9 +6,8 @@ import { HapticTab } from '@/src/components/HapticTab';
 import TabBarBackground from '@/src/components/ui/TabBarBackground';
 import { useTheme } from '@/src/hooks/useTheme';
 
-
 export default function TabLayout() {
-  const {colors, fontSize} = useTheme();
+  const { colors, fontSize } = useTheme();
 
   return (
     <Tabs
@@ -28,21 +27,33 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Início',
-          tabBarIcon: ({ color, size }) => <RefreshCcw width={size} height={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+            <RefreshCcw width={size} height={size} color={color} />
+          ),
+          accessibilityLabel: 'Ir para a tela inicial',
+          accessibilityRole: 'button',
         }}
       />
       <Tabs.Screen
         name="History"
         options={{
           title: 'Histórico',
-          tabBarIcon: ({ color, size }) => <Clock width={size} height={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+            <Clock width={size} height={size} color={color} />
+          ),
+          accessibilityLabel: 'Ver histórico de conversões',
+          accessibilityRole: 'button',
         }}
       />
       <Tabs.Screen
         name="Configuration"
         options={{
           title: 'Personalizar',
-          tabBarIcon: ({ color, size }) => <Settings width={size} height={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+            <Settings width={size} height={size} color={color} />
+          ),
+          accessibilityLabel: 'Ir para configurações',
+          accessibilityRole: 'button',
         }}
       />
     </Tabs>

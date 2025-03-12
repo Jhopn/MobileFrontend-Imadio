@@ -75,7 +75,7 @@ const ConfigurationScreen: React.FC = () => {
             Altere o tamanho da fonte
           </Text>
           <View style={styles.sliderContainer}>
-            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>min</Text>
+            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>Min</Text>
             <Slider
               style={styles.slider}
               minimumValue={12}
@@ -86,7 +86,7 @@ const ConfigurationScreen: React.FC = () => {
               maximumTrackTintColor={colors.text}
               thumbTintColor={colors.primary}
             />
-            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>max</Text>
+            <Text style={[styles.sliderLabel, { color: colors.text, fontSize: fontSize * 0.8 }]}>Max</Text>
           </View>
         </View>
 

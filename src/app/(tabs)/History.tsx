@@ -47,15 +47,33 @@ const HistoryItem: React.FC<{ item: HistoryItem }> = ({ item }) => {
   const { colors, fontSize } = useTheme();
 
   return (
-    <View style={[styles.historyItem, { backgroundColor: colors.background, borderColor: colors.primary }]}>
+    <View
+      style={[styles.historyItem, { backgroundColor: colors.background, borderColor: colors.primary }]}
+      accessible={true} // Torna o item acessível
+      accessibilityRole="button" // Define o papel de interação
+      accessibilityLabel={`Histórico do dia ${item.date}`}
+      accessibilityHint={`Descrição: ${item.description}`}
+    >
       <Image
         source={{ uri: item.imageUrl }}
         style={styles.thumbnail}
         defaultSource={require('../../assets/images/favicon.png')}
+        accessible={true} // Torna a imagem acessível
+        accessibilityLabel={`Imagem relacionada à descrição: ${item.description}`}
       />
       <View style={styles.itemContent}>
-        <Text style={[styles.date, { color: colors.text, fontSize: RFValue(fontSize - 10) }]}>{item.date}</Text>
-        <Text style={[styles.description, { color: colors.text, fontSize: RFValue(fontSize - 5)}]}>
+        <Text
+          style={[styles.date, { color: colors.text, fontSize: RFValue(fontSize - 10) }]}
+          accessible={true} // Torna o texto acessível
+          accessibilityRole="text" // Define que o item é um texto
+        >
+          {item.date}
+        </Text>
+        <Text
+          style={[styles.description, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
+          accessible={true} // Torna o texto acessível
+          accessibilityRole="text"
+        >
           {item.description}
         </Text>
       </View>
@@ -69,8 +87,18 @@ const HistoryScreen: React.FC = () => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}>Histórico</Text>
-        <Text style={[styles.subtitle, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}>
+        <Text
+          style={[styles.title, { color: colors.text, fontSize: RFValue(fontSize) }]}
+          accessible={true} // Torna o título acessível
+          accessibilityRole="header" // Define o papel de cabeçalho
+        >
+          Histórico
+        </Text>
+        <Text
+          style={[styles.subtitle, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
+          accessible={true} // Torna o subtítulo acessível
+          accessibilityRole="text"
+        >
           Aqui você encontrará as imagens que já foram convertidas
         </Text>
       </View>
@@ -81,6 +109,8 @@ const HistoryScreen: React.FC = () => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        accessibilityLabel="Lista de histórico de imagens"
+        accessible={true} // Torna a lista acessível
       />
     </SafeAreaView>
   );

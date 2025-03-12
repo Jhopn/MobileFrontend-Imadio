@@ -21,10 +21,24 @@ const HomeScreen: React.FC = () => {
 
   const isLandscape = width > height;
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // Verifique se o usuário selecionou uma imagem
+    if (!result.canceled && result.assets && result.assets[0]) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.infoButton}
           accessibilityRole="button"
           accessibilityLabel="Informações"
@@ -41,10 +55,10 @@ const HomeScreen: React.FC = () => {
       </View>
 
       <View style={[styles.content, isLandscape && styles.contentLandscape]}>
-        <View 
+        <View
           style={[styles.imageContainer, { width: isLandscape ? '40%' : '100%', backgroundColor: colors.text }]}
           accessibilityRole="image"
-          accessibilityLabel={selectedImage ? "Imagem selecionada" : "Área para selecionar imagem"}
+          accessibilityLabel={selectedImage ? 'Imagem selecionada' : 'Área para selecionar imagem'}
         >
           {selectedImage ? (
             <Image
@@ -58,23 +72,23 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <View style={[styles.buttonContainer, isLandscape && styles.buttonContainerLandscape]}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' }]}
-            onPress={() => {}} // pickImage()
+            onPress={pickImage} // pickImage() agora está chamado corretamente
             accessibilityRole="button"
             accessibilityLabel="Escolher Imagem"
             accessibilityHint="Toque para selecionar uma imagem da galeria"
           >
-            <Text style={[styles.buttonText, { fontSize: RFValue(fontSize -5), color: colors.text }]}>
+            <Text style={[styles.buttonText, { fontSize: RFValue(fontSize - 5), color: colors.text }]}>
               Escolher Imagem
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               styles.button,
               !selectedImage && styles.buttonDisabled,
-              { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' }
+              { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' },
             ]}
             onPress={() => {}} // handleConvert()
             disabled={!selectedImage}
@@ -83,11 +97,13 @@ const HomeScreen: React.FC = () => {
             accessibilityHint="Toque para converter a imagem selecionada em áudio"
             accessibilityState={{ disabled: !selectedImage }}
           >
-            <Text style={[
-              styles.buttonText,
-              !selectedImage && styles.buttonTextDisabled,
-              { fontSize: RFValue(fontSize - 5), color: colors.text }
-            ]}>
+            <Text
+              style={[
+                styles.buttonText,
+                !selectedImage && styles.buttonTextDisabled,
+                { fontSize: RFValue(fontSize - 5), color: colors.text },
+              ]}
+            >
               Converter
             </Text>
           </TouchableOpacity>
@@ -100,6 +116,7 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: '7%',
   },
   header: {
     padding: '4%',
@@ -114,7 +131,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontStyle: 'italic',
   },
   subtitle: {
     marginTop: '1%',
@@ -130,7 +146,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     aspectRatio: 1,
-    maxWidth: 400,
+    maxWidth: 360,
     borderRadius: 24,
     overflow: 'hidden',
     marginBottom: '8%',
