@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { HeaderProps } from './interfaces/schemas';
 
 
-const Header: React.FC<HeaderProps> = ({ textColor, fontSize }) => {
+const HeaderConfiguration: React.FC<HeaderProps> = ({ textColor, fontSize }) => {
   return (
     <View style={styles.headerContainer}>
       <Text style={[styles.title, { color: textColor, fontSize: fontSize * 1.5 }]}>
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default HeaderConfiguration;

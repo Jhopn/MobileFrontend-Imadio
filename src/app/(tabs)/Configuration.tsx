@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme } from '@/src/hooks/useTheme';
 import { ConfirmationModal } from '@/src/components/screens/configuration/confirmation-modal';
-import Header from '@/src/components/screens/configuration/tittle'; 
+import HeaderConfiguration from '@/src/components/screens/configuration/tittle'; 
 import FontSizeSelector from '@/src/components/screens/configuration/font-size';
 import ColorSchemeSelector from '@/src/components/screens/configuration/color-schema-selection';
 import SaveButton from '@/src/components/screens/configuration/save-button'; 
@@ -28,7 +28,7 @@ const ConfigurationScreen: React.FC = () => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Header textColor={colors.text} fontSize={fontSize} />
+        <HeaderConfiguration textColor={colors.text} fontSize={fontSize} />
 
         <FontSizeSelector
           fontSize={fontSize}
