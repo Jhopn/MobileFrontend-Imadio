@@ -4,7 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-import { ThemeProvider } from '../providers/ThemeProvider';
+import { ThemeProvider } from '../providers/theme-provider';
 import LoadingScreen from '../components/loading/loading';
 
 // Impede a SplashScreen de esconder antes do carregamento completo.

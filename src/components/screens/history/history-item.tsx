@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { HistoryItemPropsOnPress } from './interfaces/schemas';
-import { useTheme } from '@/src/hooks/useTheme';
+import { useTheme } from '@/src/hooks/use-theme';
 
 const HistoryItem: React.FC<HistoryItemPropsOnPress> = ({ item, onPress }) => {
   const { colors, fontSize } = useTheme();

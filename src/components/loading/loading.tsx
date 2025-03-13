@@ -14,7 +14,7 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import { FileText, User } from 'react-native-feather';
-import { useTheme } from '../..//hooks/useTheme';
+import { useTheme } from '../../hooks/use-theme';
 import Svg, { Path } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');

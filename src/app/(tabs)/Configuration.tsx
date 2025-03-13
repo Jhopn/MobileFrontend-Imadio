@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { useTheme } from '@/src/hooks/useTheme';
+import { useTheme } from '@/src/hooks/use-theme';
 import { ConfirmationModal } from '@/src/components/screens/configuration/confirmation-modal';
 import HeaderConfiguration from '@/src/components/screens/configuration/tittle'; 
 import FontSizeSelector from '@/src/components/screens/configuration/font-size';

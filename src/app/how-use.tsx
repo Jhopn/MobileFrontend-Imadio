@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { useTheme } from '@/src/hooks/useTheme';
+import { useTheme } from '@/src/hooks/use-theme';
 import { useRouter } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 

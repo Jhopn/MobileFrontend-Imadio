@@ -2,9 +2,9 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 import { RefreshCcw, Clock, Settings } from 'react-native-feather';
-import { HapticTab } from '@/src/components/HapticTab';
-import TabBarBackground from '@/src/components/ui/TabBarBackground';
-import { useTheme } from '@/src/hooks/useTheme';
+// import { HapticTab } from '@/src/components/HapticTab';
+// import TabBarBackground from '@/src/components/ui/TabBarBackground';
+import { useTheme } from '@/src/hooks/use-theme';
 
 export default function TabLayout() {
   const { colors, fontSize } = useTheme();
@@ -36,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="History"
+        name="history"
         options={{
           title: 'Histórico',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Configuration"
+        name="configuration"
         options={{
           title: 'Personalizar',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (

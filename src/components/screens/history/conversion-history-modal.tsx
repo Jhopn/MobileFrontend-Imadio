@@ -8,7 +8,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '../../../hooks/useTheme';
+import { useTheme } from '../../../hooks/use-theme';
 
 interface HistoryItem {
   id: string;

@@ -3,7 +3,7 @@ import { SafeAreaView, FlatList, StyleSheet } from 'react-native';
 import HistoryItem from './history-item'; 
 import HeaderHistory from './tittle'; 
 import { HistoryScreenProps } from './interfaces/schemas'; 
-import { useTheme } from '@/src/hooks/useTheme';
+import { useTheme } from '@/src/hooks/use-theme';
 import HistoryItemModal from './conversion-history-modal'; 
 
 const History: React.FC<HistoryScreenProps> = ({

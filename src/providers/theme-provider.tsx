@@ -1,23 +1,5 @@
 import { createContext, ReactNode, useState, useMemo } from "react";
-
-interface ThemeColors {
-  background: string;
-  text: string;
-  primary: string;
-}
-
-interface ThemeContextType {
-  colors: ThemeColors;
-  fontSize: number;
-  setColors: (colors: ThemeColors) => void;
-  setFontSize: (size: number) => void;
-}
-
-const defaultTheme: ThemeColors = {
-  background: "#e8e6ff",
-  text: "#000000",
-  primary: "#9f90ff",
-};
+import { defaultTheme, ThemeColors, ThemeContextType } from "./interfaces/schemas";
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
