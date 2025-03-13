@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme } from '@/src/hooks/useTheme';
-import { ConfirmationModal } from '@/src/components/modals/confirmation';
+import { ConfirmationModal } from '@/src/components/screens/configuration/confirmation-modal';
 import Header from '@/src/components/screens/configuration/tittle'; 
 import FontSizeSelector from '@/src/components/screens/configuration/font-size';
 import ColorSchemeSelector from '@/src/components/screens/configuration/color-schema-selection';
@@ -39,7 +39,7 @@ const ConfigurationScreen: React.FC = () => {
 
         <ColorSchemeSelector
           schemes={colorSchemes}
-          currentColors={colors}
+          currentColors={tempColors}
           fontSize={fontSize}
           onSelectScheme={setTempColors}
         />

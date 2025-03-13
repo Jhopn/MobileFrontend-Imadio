@@ -106,7 +106,7 @@ const HomeScreen: React.FC = () => {
               accessibilityLabel="Escolher Imagem"
               accessibilityHint="Toque para selecionar uma imagem da galeria"
             >
-              <Text style={[styles.buttonText, { fontSize, color: colors.text }]}>Escolher Imagem</Text>
+              <Text style={[styles.buttonText, { fontSize, color: colors.background }]}>Escolher Imagem</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -125,7 +125,7 @@ const HomeScreen: React.FC = () => {
               <Text style={[
                 styles.buttonText, 
                 !selectedImage && styles.buttonTextDisabled, 
-                { fontSize, color: colors.text }
+                { fontSize, color: colors.background }
               ]}>
                 Converter
               </Text>
@@ -218,8 +218,7 @@ const styles = StyleSheet.create({
     paddingVertical: '4%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '4%',
-    borderWidth: 2,
+    marginBottom: '4%'
   },
   buttonDisabled: {
     opacity: 0.5,

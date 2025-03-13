@@ -7,13 +7,10 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
+import { useTheme } from '../../../hooks/useTheme';
+import { ConfirmationModalProps } from './interfaces/schemas';
 
-interface ConfirmationModalProps {
-  visible: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   visible,
@@ -44,13 +41,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={[styles.button, { borderColor: colors.text }]}
+              style={[styles.button, { borderColor: colors.primary, backgroundColor: colors.primary }]}
               onPress={onConfirm}
               accessibilityRole="button"
               accessibilityLabel="Salvar Mudanças"
               accessibilityHint="Toque duas vezes para salvar as alterações"
             >
-              <Text style={[styles.buttonText, { color: colors.text, fontSize: fontSize }]}>
+              <Text style={[styles.buttonText, { color: colors.background, fontSize: fontSize }]}>
                 Salvar Mudanças
               </Text>
             </TouchableOpacity>

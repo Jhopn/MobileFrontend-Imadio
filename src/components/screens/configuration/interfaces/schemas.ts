@@ -79,3 +79,9 @@ export interface HeaderProps {
   textColor: string;
   fontSize: number;
 }
+
+export interface ConfirmationModalProps {
+  visible: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
