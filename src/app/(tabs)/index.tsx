@@ -8,14 +8,16 @@ import {
   Image,
   Platform,
   useWindowDimensions,
+  ScrollView,
 } from 'react-native';
 import { Info } from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from '@/src/hooks/useTheme';
 import { AudioDescriptionModal } from '@/src/components/modal/audio-description';
+import { useRouter } from 'expo-router';
 
 const HomeScreen: React.FC = () => {
+  const router = useRouter();
   const { colors, fontSize } = useTheme();
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [audioDescription, setAudioDescription] = useState('');
@@ -29,11 +31,17 @@ const HomeScreen: React.FC = () => {
     setShowAudioModal(true);
   };
 
+  const handlePress = () => {
+    router.push({
+      pathname: '/how-use' as any
+    });
+  };
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [10, 10],
       quality: 1,
     });
 
@@ -45,83 +53,95 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.infoButton}
-          accessibilityRole="button"
-          accessibilityLabel="Informações"
-          accessibilityHint="Toque para ver informações sobre o aplicativo"
-        >
-          <Info width={RFValue(24)} height={RFValue(24)} color={colors.text} />
-        </TouchableOpacity>
-        <View style={styles.titleContainer}>
-          <Text style={[styles.title, { fontSize: RFValue(fontSize), color: colors.text }]}>Início</Text>
-          <Text style={[styles.subtitle, { fontSize: RFValue(fontSize - 5), color: colors.text }]}>
-            Converta a imagem em áudio
-          </Text>
-        </View>
-      </View>
-
-      <View style={[styles.content, isLandscape && styles.contentLandscape]}>
-        <View
-          style={[styles.imageContainer, { width: isLandscape ? '40%' : '100%', backgroundColor: colors.text }]}
-          accessibilityRole="image"
-          accessibilityLabel={selectedImage ? 'Imagem selecionada' : 'Área para selecionar imagem'}
-        >
-          {selectedImage ? (
-            <Image
-              source={{ uri: selectedImage }}
-              style={styles.selectedImage}
-              accessibilityLabel="Imagem selecionada para conversão"
-            />
-          ) : (
-            <View style={styles.placeholderImage} />
-          )}
-        </View>
-
-        <View style={[styles.buttonContainer, isLandscape && styles.buttonContainerLandscape]}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        <View style={styles.header}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' }]}
-            onPress={pickImage} // pickImage() agora está chamado corretamente
+            style={styles.infoButton}
             accessibilityRole="button"
-            accessibilityLabel="Escolher Imagem"
-            accessibilityHint="Toque para selecionar uma imagem da galeria"
+            accessibilityLabel="Informações"
+            accessibilityHint="Toque para ver informações sobre o aplicativo"
+            onPress={handlePress}
           >
-            <Text style={[styles.buttonText, { fontSize: RFValue(fontSize - 5), color: colors.text }]}>
-              Escolher Imagem
-            </Text>
+            <Info width={24} height={24} color={colors.text} />
           </TouchableOpacity>
+          <View style={styles.titleContainer}>
+            <Text style={[styles.title, { fontSize: fontSize * 1.5, color: colors.text }]}>Início</Text>
+            <Text style={[styles.subtitle, { fontSize, color: colors.text }]}>Converta a imagem em áudio</Text>
+          </View>
+        </View>
 
-          <TouchableOpacity
+        <View style={[styles.content, isLandscape && styles.contentLandscape]}>
+          <View
             style={[
-              styles.button,
-              !selectedImage && styles.buttonDisabled,
-              { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' },
+              styles.imageContainer, 
+              { 
+                width: isLandscape ? '40%' : '100%', 
+                maxHeight: isLandscape ? height * 0.7 : height * 0.4,
+                backgroundColor: colors.text,
+              }
             ]}
-            onPress={() => {}} // handleConvert()
-            disabled={!selectedImage}
-            accessibilityRole="button"
-            accessibilityLabel="Converter"
-            accessibilityHint="Toque para converter a imagem selecionada em áudio"
-            accessibilityState={{ disabled: !selectedImage }}
+            accessibilityRole="image"
+            accessibilityLabel={selectedImage ? 'Imagem selecionada' : 'Área para selecionar imagem'}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                !selectedImage && styles.buttonTextDisabled,
-                { fontSize: RFValue(fontSize - 5), color: colors.text },
-              ]}
+            {selectedImage ? (
+              <Image
+                source={{ uri: selectedImage }}
+                style={styles.selectedImage}
+                accessibilityLabel="Imagem selecionada para conversão"
+              />
+            ) : (
+              <View style={styles.placeholderImage} />
+            )}
+          </View>
+
+          <View style={[styles.buttonContainer, isLandscape && styles.buttonContainerLandscape]}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' }]}
+              onPress={pickImage}
+              accessibilityRole="button"
+              accessibilityLabel="Escolher Imagem"
+              accessibilityHint="Toque para selecionar uma imagem da galeria"
             >
-              Converter
-            </Text>
-          </TouchableOpacity>
+              <Text style={[styles.buttonText, { fontSize, color: colors.text }]}>Escolher Imagem</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.button, 
+                !selectedImage && styles.buttonDisabled, 
+                { backgroundColor: colors.primary, width: isLandscape ? '80%' : '100%' }
+              ]}
+              onPress={() => handleConversion('Texto de exemplo gerado a partir da imagem')}
+              disabled={!selectedImage}
+              accessibilityRole="button"
+              accessibilityLabel="Converter"
+              accessibilityHint="Toque para converter a imagem selecionada em áudio"
+              accessibilityState={{ disabled: !selectedImage }}
+            >
+              <Text style={[
+                styles.buttonText, 
+                !selectedImage && styles.buttonTextDisabled, 
+                { fontSize, color: colors.text }
+              ]}>
+                Converter
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <AudioDescriptionModal
+        
+        {/* Espaço adicional no final para garantir que tudo seja visível */}
+        <View style={styles.bottomPadding} />
+      </ScrollView>
+
+      <AudioDescriptionModal
         visible={showAudioModal}
         description={audioDescription}
         onClose={() => setShowAudioModal(false)}
       />
-      </View>
     </SafeAreaView>
   );
 };
@@ -129,7 +149,10 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: '7%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingTop: '7%',
   },
   header: {
     padding: '4%',
@@ -149,7 +172,6 @@ const styles = StyleSheet.create({
     marginTop: '1%',
   },
   content: {
-    flex: 1,
     alignItems: 'center',
     padding: '6%',
   },
@@ -178,7 +200,7 @@ const styles = StyleSheet.create({
   selectedImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'cover', // Isso garantirá que a imagem preencha o container, mesmo que seja maior
   },
   placeholderImage: {
     flex: 1,
@@ -207,6 +229,9 @@ const styles = StyleSheet.create({
   },
   buttonTextDisabled: {
     color: '#666',
+  },
+  bottomPadding: {
+    height: 40, // Padding menor no final
   },
 });
 

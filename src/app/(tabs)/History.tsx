@@ -10,7 +10,6 @@ import {
   TouchableOpacity, // Adicione esta importação
 } from 'react-native';
 import { useTheme } from '@/src/hooks/useTheme';
-import { RFValue } from 'react-native-responsive-fontsize';
 import HistoryItemModal from '@/src/components/modal/conversion-history';
 
 const { width } = Dimensions.get('window');
@@ -70,14 +69,14 @@ const HistoryItem: React.FC<{
       />
       <View style={styles.itemContent}>
         <Text
-          style={[styles.date, { color: colors.text, fontSize: RFValue(fontSize - 10) }]}
+          style={[styles.date, { color: colors.text, fontSize}]}
           accessible={true}
           accessibilityRole="text"
         >
           {item.date}
         </Text>
         <Text
-          style={[styles.description, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
+          style={[styles.description, { color: colors.text, fontSize}]}
           accessible={true}
           accessibilityRole="text"
         >
@@ -107,14 +106,14 @@ const HistoryScreen: React.FC = () => {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Text
-          style={[styles.title, { color: colors.text, fontSize: RFValue(fontSize) }]}
+          style={[styles.title, { color: colors.text, fontSize: fontSize * 1.5 }]}
           accessible={true}
           accessibilityRole="header"
         >
           Histórico
         </Text>
         <Text
-          style={[styles.subtitle, { color: colors.text, fontSize: RFValue(fontSize - 5) }]}
+          style={[styles.subtitle, { color: colors.text, fontSize}]}
           accessible={true}
           accessibilityRole="text"
         >

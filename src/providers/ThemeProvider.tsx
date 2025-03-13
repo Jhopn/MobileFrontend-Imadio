@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
-
+import { createContext, ReactNode, useState, useMemo } from "react";
 
 interface ThemeColors {
   background: string;
@@ -15,9 +14,9 @@ interface ThemeContextType {
 }
 
 const defaultTheme: ThemeColors = {
-  background: '#e8e6ff',
-  text: '#000000',
-  primary: '#9f90ff',
+  background: "#e8e6ff",
+  text: "#000000",
+  primary: "#9f90ff",
 };
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -26,9 +25,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [colors, setColors] = useState<ThemeColors>(defaultTheme);
   const [fontSize, setFontSize] = useState<number>(16);
 
-  return (
-    <ThemeContext.Provider value={{ colors, fontSize, setColors, setFontSize }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({ colors, fontSize, setColors, setFontSize }),
+    [colors, fontSize] 
   );
+  
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

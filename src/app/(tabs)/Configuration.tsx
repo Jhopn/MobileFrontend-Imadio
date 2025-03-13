@@ -26,34 +26,42 @@ const colorSchemes: ColorScheme[] = [
   {
     id: '1',
     colors: { background: '#e8e6ff', text: '#000000', primary: '#9f90ff' },
-    name: 'Padrão',
+    name: 'STANDARD',
   },
   {
     id: '2',
-    colors: { background: '#ffffff', text: '#000000', primary: '#4a90e2' },
-    name: 'Claro',
+    colors: { background: '#FFFFFF', text: '#000000', primary: '#B8860B' },
+    name: 'GOLDEN_EVENING',
   },
   {
     id: '3',
-    colors: { background: '#121212', text: '#ffffff', primary: '#bb86fc' },
-    name: 'Escuro',
+    colors: { background: '#CCCCCC', text: '#000000', primary: '#008B8B' },
+    name: 'STAINLESS_STEEL_CYANO',
+  },
+  {
+    id: '4',
+    colors: { background: '#F2F2F2', text: '#000000', primary: '#E65100' },
+    name: 'CARAMEL_ORANGE',
   },
 ];
 
 const ConfigurationScreen: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [changeFontSize, setChangeFontSize] = useState(0);
+
   
   const { colors, fontSize, setColors, setFontSize } = useTheme();
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = (size: number) => {
     // Lógica para salvar as alterações permanentemente
+    setFontSize(size);
     console.log('Configurações salvas permanentemente');
     // Aqui você pode adicionar código para salvar em AsyncStorage ou outra forma de persistência
     setShowConfirmModal(false);
   };
 
+
   const handleSaveChanges = () => {
-    // Abrir o modal de confirmação em vez de salvar diretamente
     setShowConfirmModal(true);
   };
 
@@ -91,7 +99,7 @@ const ConfigurationScreen: React.FC = () => {
               minimumValue={12}
               maximumValue={24}
               value={fontSize}
-              onValueChange={setFontSize}
+              onValueChange={setChangeFontSize}
               minimumTrackTintColor={colors.primary}
               maximumTrackTintColor={colors.text}
               thumbTintColor={colors.primary}
@@ -126,7 +134,7 @@ const ConfigurationScreen: React.FC = () => {
 
       <ConfirmationModal
         visible={showConfirmModal}
-        onConfirm={handleConfirmSave}
+        onConfirm={() => handleConfirmSave(changeFontSize)}
         onCancel={() => setShowConfirmModal(false)}
       />
     </SafeAreaView>

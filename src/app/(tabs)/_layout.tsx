@@ -12,16 +12,17 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.background,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.text,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          height: 50,
+          paddingBottom: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: fontSize * 0.7,
+        },
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
       }}>
       <Tabs.Screen
         name="index"
@@ -30,8 +31,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <RefreshCcw width={size} height={size} color={color} />
           ),
-          accessibilityLabel: 'Ir para a tela inicial',
-          accessibilityRole: 'button',
+          // accessibilityLabel: 'Ir para a tela inicial',
+          // accessibilityRole: 'button',
         }}
       />
       <Tabs.Screen
@@ -41,8 +42,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Clock width={size} height={size} color={color} />
           ),
-          accessibilityLabel: 'Ver histórico de conversões',
-          accessibilityRole: 'button',
+          // accessibilityLabel: 'Ver histórico de conversões',
+          // accessibilityRole: 'button',
         }}
       />
       <Tabs.Screen
@@ -52,8 +53,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Settings width={size} height={size} color={color} />
           ),
-          accessibilityLabel: 'Ir para configurações',
-          accessibilityRole: 'button',
+          // accessibilityLabel: 'Ir para configurações',
+          // accessibilityRole: 'button',
         }}
       />
     </Tabs>
