@@ -13,7 +13,7 @@ import {
 import { Info } from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '@/src/hooks/useTheme';
-import { AudioDescriptionModal } from '@/src/components/modal/audio-description';
+import { AudioDescriptionModal } from '@/src/components/modals/audio-description';
 import { useRouter } from 'expo-router';
 
 const HomeScreen: React.FC = () => {

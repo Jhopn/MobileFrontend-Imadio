@@ -10,7 +10,7 @@ import {
   TouchableOpacity, // Adicione esta importação
 } from 'react-native';
 import { useTheme } from '@/src/hooks/useTheme';
-import HistoryItemModal from '@/src/components/modal/conversion-history';
+import HistoryItemModal from '@/src/components/modals/conversion-history';
 
 const { width } = Dimensions.get('window');
 
