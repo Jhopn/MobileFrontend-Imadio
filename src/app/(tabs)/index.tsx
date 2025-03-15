@@ -4,18 +4,32 @@ import { View, StyleSheet, SafeAreaView, useWindowDimensions, ScrollView } from 
 import * as ImagePicker from "expo-image-picker"
 import { useTheme } from "@/src/hooks/use-theme"
 import { AudioDescriptionModal } from "@/src/components/screens/home/audio-description"
-import { useRouter } from "expo-router"
+import { Redirect, useRouter } from "expo-router"
 import HeaderHome from "@/src/components/screens/home/tittle" 
 import ImageSelector from "@/src/components/screens/home/image-selector" 
 import ActionButtons from "@/src/components/screens/home/action-button" 
+import { useAuth } from "@/src/hooks/use-auth"
+import LoadingScreen from "@/src/components/loading/loading"
 
 const HomeScreen: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
   const { colors, fontSize } = useTheme()
   const [showAudioModal, setShowAudioModal] = useState(false)
   const [audioDescription, setAudioDescription] = useState("")
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const { width, height } = useWindowDimensions()
+
+  // Mostra a tela de carregamento enquanto verifica a autenticação
+  if (isLoading) {
+    return <LoadingScreen />
+  }
+
+  // Redireciona com base no estado de autenticação
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)/login" />
+  } 
+  
 
   const isLandscape = width > height
 

@@ -1,61 +1,37 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
-import { ThemeProvider } from '../providers/theme-provider';
-import LoadingScreen from '../components/loading/loading';
+import { useFonts } from "expo-font"
+import { Slot, SplashScreen } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+import { useEffect } from "react"
+import "react-native-reanimated"
+import { ThemeProvider } from "../providers/themes/theme-provider"
+import { AuthProvider } from "../providers/auth/auth-provider" 
 
 // Impede a SplashScreen de esconder antes do carregamento completo.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  const [isLoading, setIsLoading] = useState(true); // ⬅️ MOVIDO PARA CIMA
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  })
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
-  useEffect(() => {
-    // Simula um tempo de carregamento
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+  if (!loaded) {
+    return null
+  }
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!loaded) { 
-    return null; 
-  } // ⬅️ O RETORNO AQUI NÃO AFETA A ORDEM DOS HOOKS
-
+  // Importante: Use Slot em vez de Stack no Root Layout
   return (
-    <ThemeProvider>
-      {isLoading ? (
-        <LoadingScreen />
-      ) : (
-        <>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen 
-              name="how-use" 
-              options={{ 
-                headerShown: false,
-                presentation: 'modal'
-              }} 
-            />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </>
-      )}
-    </ThemeProvider>
-  );
+    <AuthProvider>
+      <ThemeProvider>
+        <Slot />
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </AuthProvider>
+  )
 }
+

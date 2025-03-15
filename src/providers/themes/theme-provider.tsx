@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useState, useMemo } from "react";
-import { defaultTheme, ThemeColors, ThemeContextType } from "./interfaces/schemas";
+import { ReactNode, useState, useMemo } from "react";
+import { ThemeContext } from './theme-context';
+import { defaultTheme, ThemeColors } from "./interfaces/schemas";
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [colors, setColors] = useState<ThemeColors>(defaultTheme);
