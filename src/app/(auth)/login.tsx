@@ -87,7 +87,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} accessible={true} accessibilityLabel="Tela de login">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
@@ -95,17 +95,18 @@ const LoginScreen = () => {
         <ScrollView 
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          accessibilityLabel="Formulário de login"
         >
           <View style={styles.content}>
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title} accessibilityRole="header">Login</Text>
 
-            <View style={styles.iconContainer}>
+            <View style={styles.iconContainer} accessibilityLabel="Ícones do aplicativo IMADIO" importantForAccessibility="no">
               <FileText width={20} height={20} color="#000" />
               <View style={styles.line} />
               <User width={20} height={20} color="#000" />
             </View>
 
-            <Text style={styles.logoText}>IMADIO</Text>
+            <Text style={styles.logoText} accessibilityLabel="IMADIO" accessibilityRole="text">IMADIO</Text>
 
             <View style={styles.formContainer}>
               <View style={styles.inputContainer}>
@@ -120,9 +121,18 @@ const LoginScreen = () => {
                     if (errors.email) setErrors(prev => ({...prev, email: undefined}));
                   }}
                   autoCapitalize="none"
+                  accessibilityLabel="Campo de email"
+                  accessibilityHint="Digite seu endereço de email"
+                  accessibilityRole="text"
                 />
                 {errors.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
+                  <Text 
+                    style={styles.errorText} 
+                    accessibilityLabel={`Erro: ${errors.email}`}
+                    accessibilityLiveRegion="polite"
+                  >
+                    {errors.email}
+                  </Text>
                 )}
               </View>
 
@@ -137,22 +147,39 @@ const LoginScreen = () => {
                     setFormData(prev => ({...prev, password: text}));
                     if (errors.password) setErrors(prev => ({...prev, password: undefined}));
                   }}
+                  accessibilityLabel="Campo de senha"
+                  accessibilityHint="Digite sua senha"
+                  accessibilityRole="text"
                 />
                 {errors.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
+                  <Text 
+                    style={styles.errorText}
+                    accessibilityLabel={`Erro: ${errors.password}`}
+                    accessibilityLiveRegion="polite"
+                  >
+                    {errors.password}
+                  </Text>
                 )}
               </View>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel="Esqueceu sua senha"
+                accessibilityHint="Toque para recuperar sua senha"
+              >
                 <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
               </TouchableOpacity>
 
               {/* Mensagem de resposta da API */}
               {responseMessage && (
-                <View style={[
-                  styles.responseContainer, 
-                  responseMessage.type === 'success' ? styles.successContainer : styles.errorContainer
-                ]}>
+                <View 
+                  style={[
+                    styles.responseContainer, 
+                    responseMessage.type === 'success' ? styles.successContainer : styles.errorContainer
+                  ]}
+                  accessibilityLiveRegion="assertive"
+                  accessibilityLabel={responseMessage.type === 'success' ? 'Mensagem de sucesso' : 'Mensagem de erro'}
+                >
                   <Text style={[
                     styles.responseText,
                     responseMessage.type === 'success' ? styles.successText : styles.errorText
@@ -166,9 +193,13 @@ const LoginScreen = () => {
                 style={[styles.button, isLoading && styles.buttonDisabled]} 
                 onPress={handleLogin}
                 disabled={isLoading}
+                accessibilityRole="button"
+                accessibilityLabel="Botão de login"
+                accessibilityHint="Toque para fazer login"
+                accessibilityState={{ disabled: isLoading }}
               >
                 {isLoading ? (
-                  <ActivityIndicator color="#000" size="small" />
+                  <ActivityIndicator color="#000" size="small" accessibilityLabel="Carregando" />
                 ) : (
                   <Text style={styles.buttonText}>Entrar</Text>
                 )}
@@ -181,7 +212,11 @@ const LoginScreen = () => {
               </TouchableOpacity>
 
               <Link href="/(auth)/register" asChild>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  accessibilityRole="link"
+                  accessibilityLabel="Ir para tela de cadastro"
+                  accessibilityHint="Toque para ir para a tela de cadastro se não tiver uma conta"
+                >
                   <Text style={[styles.signupText, { color: colors.primary, fontSize: fontSize * 0.8 }]}>
                   Não possui conta? Faça o cadastro!
                   </Text>
