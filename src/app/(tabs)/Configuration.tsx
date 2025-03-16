@@ -7,6 +7,7 @@ import FontSizeSelector from '@/src/components/screens/configuration/font-size';
 import ColorSchemeSelector from '@/src/components/screens/configuration/color-schema-selection';
 import SaveButton from '@/src/components/screens/configuration/save-button'; 
 import { colorSchemes, ColorScheme } from '@/src/components/screens/configuration/interfaces/schemas'
+import { updateSettingsUser } from '@/src/server/api/api';
 
 const ConfigurationScreen: React.FC = () => {
   const { colors, fontSize, setColors, setFontSize } = useTheme();
@@ -14,10 +15,20 @@ const ConfigurationScreen: React.FC = () => {
   const [tempFontSize, setTempFontSize] = useState(fontSize);
   const [tempColors, setTempColors] = useState<ColorScheme['colors']>(colors);
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = async () => {
     setFontSize(tempFontSize);
     setColors(tempColors);
+
+
     console.log('Configurações salvas permanentemente');
+
+    const updateSettings = {
+      theme: tempColors.value,
+      fontSize: String(fontSize),
+    }
+
+    const response = await updateSettingsUser(updateSettings)
+    console.log(response)
     setShowConfirmModal(false);
   };
 

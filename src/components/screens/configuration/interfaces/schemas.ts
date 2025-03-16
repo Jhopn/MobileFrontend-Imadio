@@ -1,12 +1,14 @@
+import { Theme } from "@/src/server/interfaces/schema";
+
 export interface ColorScheme {
     id: string;
     colors: {
         background: string;
         text: string;
         primary: string;
+        value: Theme;
     };
     name: string;
-    value: string;
 }
 
 export interface ColorSchemeSelectorProps {
@@ -29,59 +31,75 @@ export interface ColorScheme {
         background: string;
         text: string;
         primary: string;
+        value: Theme;
     };
     name: string;
-    value: string;
 }
 
 export const colorSchemes: ColorScheme[] = [
     {
         id: '1',
-        colors: { background: '#e8e6ff', text: '#000000', primary: '#9f90ff' },
+        colors: {
+            background: '#e8e6ff', 
+            text: '#000000',
+            primary: '#9f90ff',
+            value: Theme.STANDARD
+        },
         name: 'Padrão',
-        value: 'STANDARD'
     },
     {
         id: '2',
-        colors: { background: '#FFFFFF', text: '#000000', primary: '#B8860B' },
+        colors: {
+            background: '#FFFFFF', 
+            text: '#000000', 
+            primary: '#B8860B',
+            value: Theme.GOLDEN_EVENING
+        },
         name: 'Dourado Noite',
-        value: 'GOLDEN_EVENING'
     },
     {
         id: '3',
-        colors: { background: '#CCCCCC', text: '#000000', primary: '#008B8B' },
+        colors: {
+            background: '#CCCCCC', 
+            text: '#000000', 
+            primary: '#008B8B',
+            value: Theme.STAINLESS_STEEL_CYANO
+        },
         name: 'Ciano Aço',
-        value: 'STAINLESS_STEEL_CYANO'
     },
     {
         id: '4',
-        colors: { background: '#F2F2F2', text: '#000000', primary: '#E65100' },
+        colors: {
+            background: '#F2F2F2', 
+            text: '#000000', 
+            primary: '#E65100',
+            value: Theme.CARAMEL_ORANGE
+        },
         name: 'Laranja Caramelo',
-        value: 'CARAMEL_ORANGE',
     },
 ];
 
 export interface FontSizeSelectorProps {
-  fontSize: number;
-  textColor: string;
-  primaryColor: string;
-  onValueChange: (value: number) => void;
+    fontSize: number;
+    textColor: string;
+    primaryColor: string;
+    onValueChange: (value: number) => void;
 }
 
 export interface SaveButtonProps {
-  onPress: () => void;
-  backgroundColor: string;
-  textColor: string;
-  fontSize: number;
+    onPress: () => void;
+    backgroundColor: string;
+    textColor: string;
+    fontSize: number;
 }
 
 export interface HeaderProps {
-  textColor: string;
-  fontSize: number;
+    textColor: string;
+    fontSize: number;
 }
 
 export interface ConfirmationModalProps {
-  visible: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
+    visible: boolean;
+    onConfirm: () => void;
+    onCancel: () => void;
 }
