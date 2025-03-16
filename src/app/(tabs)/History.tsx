@@ -1,32 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import History from '@/src/components/screens/history/history'; 
 import { HistoryItem } from '@/src/components/screens/history/interfaces/schemas';
-
-// Dados de exemplo - em um app real, isso viria de uma API ou banco de dados local
-const historyData: HistoryItem[] = [
-  {
-    id: '1',
-    date: '01/12/2024',
-    description: 'Há um teclado de computador e um mouse em uma mesa',
-    imageUrl: 'https://example.com/keyboard-image.jpg',
-  },
-  {
-    id: '2',
-    date: '01/12/2024',
-    description: 'Há um teclado de computador e um mouse em uma mesa',
-    imageUrl: 'https://example.com/keyboard-image.jpg',
-  },
-  {
-    id: '3',
-    date: '01/12/2024',
-    description: 'Há um teclado de computador e um mouse em uma mesa',
-    imageUrl: 'https://example.com/keyboard-image.jpg',
-  },
-];
+import { getConversionUser } from '@/src/server/api/api';
 
 const HistoryScreen: React.FC = () => {
+  const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchConversions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getConversionUser();
+        console.log('Dados recebidos da API:', response);
+        
+        // Verifique se a resposta contém dados válidos
+        if (response && response.data) {
+          setHistoryData(response.data);
+        } else {
+          setHistoryData([]);
+        }
+        setError(null);
+      } catch (error) {
+        console.error('Erro ao carregar áudio descrições do usuário:', error);
+        setError('Não foi possível carregar seu histórico. Tente novamente mais tarde.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchConversions();
+  }, []);
 
   const handleItemPress = (item: HistoryItem) => {
     setSelectedItem(item);

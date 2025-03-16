@@ -13,14 +13,14 @@ const HistoryItem: React.FC<HistoryItemPropsOnPress> = ({ item, onPress }) => {
       accessible
       accessibilityRole="button"
       accessibilityLabel={`Histórico do dia ${item.date}`}
-      accessibilityHint={`Toque para ver detalhes. Descrição: ${item.description}`}
+      accessibilityHint={`Toque para ver detalhes. Descrição: ${item.convertedText}`}
     >
       <Image
         source={{ uri: item.imageUrl }}
         style={styles.thumbnail}
         defaultSource={require('../../../assets/images/favicon.png')}
         accessible
-        accessibilityLabel={`Imagem relacionada à descrição: ${item.description}`}
+        accessibilityLabel={`Imagem relacionada à descrição: ${item.convertedText}`}
       />
       <View style={styles.itemContent}>
         <Text 
@@ -30,10 +30,10 @@ const HistoryItem: React.FC<HistoryItemPropsOnPress> = ({ item, onPress }) => {
           {item.date}
         </Text>
         <Text 
-          style={[styles.description, { color: colors.text, fontSize: fontSize * 0.9 }]}
+          style={[styles.convertedText, { color: colors.text, fontSize: fontSize * 0.9 }]}
           accessibilityRole="text"
         >
-          {item.description}
+          {item.convertedText}
         </Text>
       </View>
     </TouchableOpacity>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   date: {
     marginBottom: 4,
   },
-  description: {
+  convertedText: {
     lineHeight: 22,
   },
 });

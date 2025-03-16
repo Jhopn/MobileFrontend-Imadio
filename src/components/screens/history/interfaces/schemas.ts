@@ -1,9 +1,15 @@
 export interface HistoryItem {
     id: string;
     date: string;
-    description: string;
+    convertedText: string;
     imageUrl: string;
   }
+
+export interface HistoryItemModalProps {
+  visible: boolean;
+  item: HistoryItem | null;
+  onClose: () => void;
+}
   
   export interface HistoryItemProps {
     item: HistoryItem;

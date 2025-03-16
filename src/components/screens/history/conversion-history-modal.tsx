@@ -9,19 +9,9 @@ import {
   Dimensions,
 } from 'react-native';
 import { useTheme } from '../../../hooks/use-theme';
+import { HistoryItemModalProps } from './interfaces/schemas';
 
-interface HistoryItem {
-  id: string;
-  date: string;
-  description: string;
-  imageUrl: string;
-}
 
-interface HistoryItemModalProps {
-  visible: boolean;
-  item: HistoryItem | null;
-  onClose: () => void;
-}
 
 const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
   visible,
@@ -70,12 +60,12 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
 
           <Text 
             style={[
-              styles.description, 
+              styles.convertedText, 
               { color: colors.text, fontSize: fontSize }
             ]}
             accessibilityRole="text"
           >
-            {item.description}
+            {item.convertedText}
           </Text>
 
           <TouchableOpacity
@@ -136,7 +126,7 @@ const styles = StyleSheet.create({
   date: {
     marginBottom: 8,
   },
-  description: {
+  convertedText: {
     textAlign: 'center',
     marginBottom: 24,
     paddingHorizontal: 10,
