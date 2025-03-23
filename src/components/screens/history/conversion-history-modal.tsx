@@ -55,7 +55,7 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
               { color: colors.text, fontSize: fontSize * 0.9 }
             ]}
           >
-            {item.date}
+            {item.createdAt}
           </Text>
 
           <Text 

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import History from '@/src/components/screens/history/history'; 
 import { HistoryItem } from '@/src/components/screens/history/interfaces/schemas';
-import { getConversionUser } from '@/src/server/api/api';
+import { getConversionUser, deleteConversionUser } from '@/src/server/api/api';
 
 const HistoryScreen: React.FC = () => {
   const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
@@ -10,28 +11,27 @@ const HistoryScreen: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchConversions = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getConversionUser();
-        console.log('Dados recebidos da API:', response);
-        
-        // Verifique se a resposta contém dados válidos
-        if (response && response.data) {
-          setHistoryData(response.data);
-        } else {
-          setHistoryData([]);
-        }
-        setError(null);
-      } catch (error) {
-        console.error('Erro ao carregar áudio descrições do usuário:', error);
-        setError('Não foi possível carregar seu histórico. Tente novamente mais tarde.');
-      } finally {
-        setIsLoading(false);
+  const fetchConversions = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getConversionUser();
+      console.log('Dados recebidos da API:', response);
+      
+      if (response && response.data) {
+        setHistoryData(response.data);
+      } else {
+        setHistoryData([]);
       }
-    };
+      setError(null);
+    } catch (error) {
+      console.error('Erro ao carregar áudio descrições do usuário:', error);
+      setError('Não foi possível carregar seu histórico. Tente novamente mais tarde.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchConversions();
   }, []);
 
@@ -45,6 +45,27 @@ const HistoryScreen: React.FC = () => {
     setSelectedItem(null);
   };
 
+  // Função para excluir um item do histórico
+  const handleDeleteItem = async (id: string) => {
+    try {
+      setIsLoading(true);
+      
+      // Chama a API para excluir o item
+      await deleteConversionUser(id);
+      
+      // Atualiza o estado local removendo o item excluído
+      setHistoryData(prevData => prevData.filter(item => item.id !== id));
+      
+      // Feedback para o usuário
+      Alert.alert("Sucesso", "Item excluído com sucesso!");
+    } catch (error) {
+      console.error('Erro ao excluir item:', error);
+      Alert.alert("Erro", "Não foi possível excluir o item. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <History
       historyData={historyData}
@@ -52,6 +73,9 @@ const HistoryScreen: React.FC = () => {
       modalVisible={modalVisible}
       selectedItem={selectedItem}
       handleCloseModal={handleCloseModal}
+      isLoading={isLoading}
+      error={error}
+      handleDeleteItem={handleDeleteItem}
     />
   );
 };

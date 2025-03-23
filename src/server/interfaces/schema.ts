@@ -9,3 +9,7 @@ export interface UpdateSettings{
     theme: Theme,
     fontSize: string
 }
+
+export type CreateConversion = {
+  file: File | Blob; 
+};

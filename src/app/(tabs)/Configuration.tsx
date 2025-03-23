@@ -8,6 +8,7 @@ import ColorSchemeSelector from '@/src/components/screens/configuration/color-sc
 import SaveButton from '@/src/components/screens/configuration/save-button'; 
 import { colorSchemes, ColorScheme } from '@/src/components/screens/configuration/interfaces/schemas'
 import { updateSettingsUser } from '@/src/server/api/api';
+import LogoutButton from '@/src/components/screens/configuration/logout-button';
 
 const ConfigurationScreen: React.FC = () => {
   const { colors, fontSize, setColors, setFontSize } = useTheme();
@@ -61,6 +62,13 @@ const ConfigurationScreen: React.FC = () => {
           textColor={colors.background}
           fontSize={fontSize}
         />
+
+        <LogoutButton
+          primaryColor={colors.primary}
+          fontSize={fontSize}
+          style={{ marginTop: 30 }}
+        />
+
       </ScrollView>
 
       <ConfirmationModal

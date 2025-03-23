@@ -6,11 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colorSchemes } from "@/src/components/screens/configuration/interfaces/schemas";
 
 
-async function handleSettings(){
-  const response = await getSettingsUser();
-  return response.data
-}
-
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const [colors, setColors] = useState<ThemeColors>(defaultTheme);
@@ -32,7 +27,6 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
               let foundTheme = colorSchemes.find(scheme => 
                 scheme.colors.value === themeStored
               );
-              console.log(foundTheme)
               setColors(foundTheme?.colors)
             }
             

@@ -1,7 +1,7 @@
 import { BASE_URL } from '@/src/constants/api-url';
 import { Credentials, User } from '@/src/providers/auth/interfaces/schemas';
 import axios from 'axios';
-import { UpdateSettings } from '../interfaces/schema';
+import { CreateConversion, UpdateSettings } from '../interfaces/schema';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -55,3 +55,39 @@ export async function getConversionUser() {
     })
     return response;
 }
+
+export async function postConversionUser(data: FormData) {
+    try {
+        const tokenStorage = await AsyncStorage.getItem('@auth_token');
+        const tokenWithout = tokenStorage ? JSON.parse(tokenStorage) : null;
+
+        if (!tokenWithout) {
+            throw new Error('Token de autenticação não encontrado');
+        }
+
+        const response = await axiosClient.post("/conversion", data, { 
+            headers: {
+                'Authorization': `Bearer ${tokenWithout}`,
+                'Content-Type': 'multipart/form-data',
+            },
+            timeout: 40000
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Erro detalhado na requisição:', error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export async function deleteConversionUser(id: string) {
+    const tokenStorage = await AsyncStorage.getItem('@auth_token');
+    const tokenWithout= tokenStorage?.replaceAll('"', '')
+
+    const response = await axiosClient.delete(`/conversion/${id}`, {
+        headers:{
+            'Authorization': `Bearer ${tokenWithout}`,
+        }
+    });
+    return response;
+  }

@@ -1,7 +1,7 @@
 import type React from "react"
 import { useState } from "react"
 import { View, StyleSheet, SafeAreaView, useWindowDimensions, ScrollView } from "react-native"
-import * as ImagePicker from "expo-image-picker"
+import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "@/src/hooks/use-theme"
 import { AudioDescriptionModal } from "@/src/components/screens/home/audio-description"
 import { Redirect, useRouter } from "expo-router"
@@ -10,6 +10,8 @@ import ImageSelector from "@/src/components/screens/home/image-selector"
 import ActionButtons from "@/src/components/screens/home/action-button" 
 import { useAuth } from "@/src/hooks/use-auth"
 import LoadingScreen from "@/src/components/loading/loading"
+import { postConversionUser } from "@/src/server/api/api"
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const HomeScreen: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -19,6 +21,8 @@ const HomeScreen: React.FC = () => {
   const [audioDescription, setAudioDescription] = useState("")
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const { width, height } = useWindowDimensions()
+  const [error, setError] = useState('');
+  const [isLoadingConversion, setIsLoadingConversion] = useState(false);
 
   // Mostra a tela de carregamento enquanto verifica a autenticação
   if (isLoading) {
@@ -33,13 +37,40 @@ const HomeScreen: React.FC = () => {
 
   const isLandscape = width > height
 
-  const handleConversion = () => {
-    // Aqui você implementaria a lógica real de conversão
-    // Por enquanto, estamos usando um texto de exemplo
-    const description = "Texto de exemplo gerado a partir da imagem"
-    setAudioDescription(description)
-    setShowAudioModal(true)
-  }
+  const handleConversion = async () => {
+    try {
+      if (!selectedImage) {
+        console.error('Nenhuma imagem selecionada');
+        return;
+      }
+  
+      setIsLoadingConversion(true);
+  
+      const formData = new FormData();
+      formData.append('file', {
+        uri: selectedImage,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      } as any);
+      
+  
+      const response = await postConversionUser(formData);
+      console.log('Resposta da API:', response);
+  
+      if (response && response.data && response.data.convertedText) {
+        setAudioDescription(response.data.convertedText);
+        setShowAudioModal(true);
+      } else {
+        throw new Error('Resposta da API não contém o texto convertido');
+      }
+    } catch (error) {
+      console.error('Erro ao converter imagem:', error);
+      setError('Não foi possível converter a imagem. Tente novamente.');
+    } finally {
+      setIsLoadingConversion(false);
+    }
+  };
+  
 
   const handleInfoPress = () => {
     router.push({
@@ -48,12 +79,12 @@ const HomeScreen: React.FC = () => {
   }
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
       allowsEditing: true,
-      aspect: [10, 10],
+      aspect: [4, 3],
       quality: 1,
-    })
+    });
 
     if (!result.canceled && result.assets && result.assets[0]) {
       setSelectedImage(result.assets[0].uri)
