@@ -3,7 +3,7 @@ import { ThemeContext } from './theme-context';
 import { defaultTheme, ThemeColors } from "./interfaces/schemas";
 import { getSettingsUser } from "@/src/server/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { colorSchemes } from "@/src/components/screens/configuration/interfaces/schemas";
+import { colorSchemes, Configuration } from "@/src/components/configuration/interfaces/schemas";
 
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -21,18 +21,18 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           console.log(response)
           
           if (response && response.data) {
-            // Atualiza o tema com as configurações do usuário
-            if (response.data.theme) {
-              const themeStored = response.data.theme;
+            const configurationData = response.data as Configuration
+            if (configurationData.theme) {
+              const themeStored = configurationData.theme;
               let foundTheme = colorSchemes.find(scheme => 
                 scheme.colors.value === themeStored
               );
-              setColors(foundTheme?.colors)
+              setColors(foundTheme!.colors)
             }
             
-            // Atualiza o tamanho da fonte se disponível
-            if (response.data.fontSize) {
-              const fontSizeStored = Number(response.data.fontSize)
+            if (configurationData.fontSize) {
+              console.log(response.data)
+              const fontSizeStored = Number(configurationData.fontSize)
               setFontSize(fontSizeStored);
             }
 

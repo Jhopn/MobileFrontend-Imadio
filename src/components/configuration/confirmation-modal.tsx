@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '../../../hooks/use-theme';
+import { useTheme } from '../../hooks/use-theme';
 import { ConfirmationModalProps } from './interfaces/schemas';
 
 

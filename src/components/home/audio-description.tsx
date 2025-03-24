@@ -5,22 +5,22 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '../../../hooks/use-theme';
-import { HistoryItemModalProps } from './interfaces/schemas';
+import { useTheme } from '../../hooks/use-theme';
 
+interface AudioDescriptionModalProps {
+  visible: boolean;
+  description: string;
+  onClose: () => void;
+}
 
-
-const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
+const AudioDescriptionModal: React.FC<AudioDescriptionModalProps> = ({
   visible,
-  item,
+  description,
   onClose,
 }) => {
   const { colors, fontSize } = useTheme();
-  
-  if (!item) return null;
 
   return (
     <Modal
@@ -32,13 +32,6 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-          <Image
-            source={{ uri: item.imageUrl }}
-            style={styles.image}
-            accessibilityLabel="Imagem convertida"
-            resizeMode="cover"
-          />
-
           <Text 
             style={[
               styles.title, 
@@ -48,39 +41,34 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
           >
             Áudio descrição:
           </Text>
-
+          
           <Text 
             style={[
-              styles.date, 
-              { color: colors.text, fontSize: fontSize * 0.9 }
-            ]}
-          >
-            {item.createdAt}
-          </Text>
-
-          <Text 
-            style={[
-              styles.convertedText, 
+              styles.description, 
               { color: colors.text, fontSize: fontSize }
             ]}
             accessibilityRole="text"
           >
-            {item.convertedText}
+            {description}
+          </Text>
+          
+          <Text 
+            style={[
+              styles.info, 
+              { color: colors.text, fontSize: fontSize * 0.9 }
+            ]}
+          >
+            Essa conversão estará disponível no histórico.
           </Text>
 
           <TouchableOpacity
             style={[styles.button, { borderColor: colors.text }]}
             onPress={onClose}
             accessibilityRole="button"
-            accessibilityLabel="Fechar visualização"
-            accessibilityHint="Toque duas vezes para fechar a visualização do item"
+            accessibilityLabel="Fechar modal"
+            accessibilityHint="Toque duas vezes para fechar a descrição do áudio"
           >
-            <Text 
-              style={[
-                styles.buttonText, 
-                { color: colors.text, fontSize: fontSize }
-              ]}
-            >
+            <Text style={[styles.buttonText, { color: colors.text, fontSize: fontSize }]}>
               Fechar
             </Text>
           </TouchableOpacity>
@@ -96,13 +84,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   modalContainer: {
-    width: '100%',
+    width: '80%',
     maxWidth: 400,
     borderRadius: 20,
-    padding: 20,
+    padding: 24,
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
@@ -113,23 +100,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  image: {
-    width: '100%',
-    aspectRatio: 1,
-    borderRadius: 15,
-    marginBottom: 16,
-  },
   title: {
     fontWeight: 'bold',
-    marginBottom: 8,
+    textAlign: 'center',
+    marginBottom: 16,
   },
-  date: {
-    marginBottom: 8,
+  description: {
+    textAlign: 'center',
+    marginBottom: 16,
+    fontWeight: 'bold',
   },
-  convertedText: {
+  info: {
     textAlign: 'center',
     marginBottom: 24,
-    paddingHorizontal: 10,
+  },
+  buttonContainer: {
+    width: '100%',
+    gap: 12,
   },
   button: {
     width: '100%',
@@ -143,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HistoryItemModal;
+export {AudioDescriptionModal};

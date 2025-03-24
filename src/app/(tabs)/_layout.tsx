@@ -1,13 +1,17 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, AccessibilityInfo, Pressable, GestureResponderEvent } from 'react-native';
 import { RefreshCcw, Clock, Settings } from 'react-native-feather';
-// import { HapticTab } from '@/src/components/HapticTab';
-// import TabBarBackground from '@/src/components/ui/TabBarBackground';
 import { useTheme } from '@/src/hooks/use-theme';
 
 export default function TabLayout() {
   const { colors, fontSize } = useTheme();
+
+  const announceScreenChange = (screenName: string) => {
+    if (Platform.OS === 'ios') {
+      AccessibilityInfo.announceForAccessibility(`Navegou para ${screenName}`);
+    }
+  };
 
   return (
     <Tabs
@@ -16,8 +20,8 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.text,
         tabBarStyle: {
           backgroundColor: colors.background,
-          height: 50,
-          paddingBottom: 8,
+          height: 70,
+          paddingBottom: 5,
         },
         tabBarLabelStyle: {
           fontSize: fontSize * 0.7,
@@ -29,10 +33,33 @@ export default function TabLayout() {
         options={{
           title: 'Início',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-            <RefreshCcw width={size} height={size} color={color} />
+            <RefreshCcw width={size} height={size} stroke={color} />
           ),
-          // accessibilityLabel: 'Ir para a tela inicial',
-          // accessibilityRole: 'button',
+          tabBarAccessibilityLabel: 'Tela inicial',
+          // Removido tabBarTestID que estava causando erro
+          tabBarLabelPosition: 'below-icon',
+          tabBarItemStyle: {
+            paddingTop: 8,
+          },
+          // Propriedades de acessibilidade
+          tabBarButton: (props) => (
+            <Pressable
+              {...props}
+              accessibilityRole="tab"
+              accessibilityLabel="Tela inicial"
+              accessibilityHint="Navega para a tela inicial do aplicativo"
+              accessibilityState={{ selected: props.accessibilityState?.selected }}
+              onPress={(event: GestureResponderEvent) => {
+                // Corrigido para passar o evento para props.onPress
+                if (props.onPress) {
+                  props.onPress(event);
+                }
+                announceScreenChange('Tela inicial');
+              }}
+            >
+              {props.children}
+            </Pressable>
+          ),
         }}
       />
       <Tabs.Screen
@@ -40,10 +67,33 @@ export default function TabLayout() {
         options={{
           title: 'Histórico',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-            <Clock width={size} height={size} color={color} />
+            <Clock width={size} height={size} stroke={color} />
           ),
-          // accessibilityLabel: 'Ver histórico de conversões',
-          // accessibilityRole: 'button',
+          tabBarAccessibilityLabel: 'Histórico de conversões',
+          // Removido tabBarTestID que estava causando erro
+          tabBarLabelPosition: 'below-icon',
+          tabBarItemStyle: {
+            paddingTop: 8,
+          },
+          // Propriedades de acessibilidade
+          tabBarButton: (props) => (
+            <Pressable
+              {...props}
+              accessibilityRole="tab"
+              accessibilityLabel="Histórico de conversões"
+              accessibilityHint="Mostra o histórico de conversões realizadas"
+              accessibilityState={{ selected: props.accessibilityState?.selected }}
+              onPress={(event: GestureResponderEvent) => {
+                // Corrigido para passar o evento para props.onPress
+                if (props.onPress) {
+                  props.onPress(event);
+                }
+                announceScreenChange('Histórico de conversões');
+              }}
+            >
+              {props.children}
+            </Pressable>
+          ),
         }}
       />
       <Tabs.Screen
@@ -51,10 +101,33 @@ export default function TabLayout() {
         options={{
           title: 'Personalizar',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-            <Settings width={size} height={size} color={color} />
+            <Settings width={size} height={size} stroke={color} />
           ),
-          // accessibilityLabel: 'Ir para configurações',
-          // accessibilityRole: 'button',
+          tabBarAccessibilityLabel: 'Configurações e personalização',
+          // Removido tabBarTestID que estava causando erro
+          tabBarLabelPosition: 'below-icon',
+          tabBarItemStyle: {
+            paddingTop: 8,
+          },
+          // Propriedades de acessibilidade
+          tabBarButton: (props) => (
+            <Pressable
+              {...props}
+              accessibilityRole="tab"
+              accessibilityLabel="Configurações e personalização"
+              accessibilityHint="Acessa as configurações e opções de personalização"
+              accessibilityState={{ selected: props.accessibilityState?.selected }}
+              onPress={(event: GestureResponderEvent) => {
+                // Corrigido para passar o evento para props.onPress
+                if (props.onPress) {
+                  props.onPress(event);
+                }
+                announceScreenChange('Configurações e personalização');
+              }}
+            >
+              {props.children}
+            </Pressable>
+          ),
         }}
       />
     </Tabs>

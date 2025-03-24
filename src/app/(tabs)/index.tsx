@@ -3,15 +3,15 @@ import { useState } from "react"
 import { View, StyleSheet, SafeAreaView, useWindowDimensions, ScrollView } from "react-native"
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "@/src/hooks/use-theme"
-import { AudioDescriptionModal } from "@/src/components/screens/home/audio-description"
+import { AudioDescriptionModal } from "@/src/components/home/audio-description"
 import { Redirect, useRouter } from "expo-router"
-import HeaderHome from "@/src/components/screens/home/tittle" 
-import ImageSelector from "@/src/components/screens/home/image-selector" 
-import ActionButtons from "@/src/components/screens/home/action-button" 
+import HeaderHome from "@/src/components/home/tittle" 
+import ImageSelector from "@/src/components/home/image-selector" 
+import ActionButtons from "@/src/components/home/action-button" 
 import { useAuth } from "@/src/hooks/use-auth"
 import LoadingScreen from "@/src/components/loading/loading"
 import { postConversionUser } from "@/src/server/api/api"
-import * as ImageManipulator from 'expo-image-manipulator';
+import { Conversion } from "@/src/components/home/interfaces/schemas";
 
 const HomeScreen: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -24,12 +24,11 @@ const HomeScreen: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoadingConversion, setIsLoadingConversion] = useState(false);
 
-  // Mostra a tela de carregamento enquanto verifica a autenticação
+
   if (isLoading) {
     return <LoadingScreen />
   }
 
-  // Redireciona com base no estado de autenticação
   if (!isAuthenticated) {
     return <Redirect href="/(auth)/login" />
   } 
@@ -56,9 +55,10 @@ const HomeScreen: React.FC = () => {
   
       const response = await postConversionUser(formData);
       console.log('Resposta da API:', response);
-  
-      if (response && response.data && response.data.convertedText) {
-        setAudioDescription(response.data.convertedText);
+      
+      if (response && response.data) {
+        const conversionData = response.data as Conversion
+        setAudioDescription(conversionData.convertedText);
         setShowAudioModal(true);
       } else {
         throw new Error('Resposta da API não contém o texto convertido');

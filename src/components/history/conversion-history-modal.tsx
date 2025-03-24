@@ -5,22 +5,23 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Image,
   Dimensions,
 } from 'react-native';
-import { useTheme } from '../../../hooks/use-theme';
+import { useTheme } from '../../hooks/use-theme';
+import { HistoryItemModalProps } from './interfaces/schemas';
+import { formatDate } from '@/src/util/commom';
 
-interface AudioDescriptionModalProps {
-  visible: boolean;
-  description: string;
-  onClose: () => void;
-}
 
-const AudioDescriptionModal: React.FC<AudioDescriptionModalProps> = ({
+
+const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
   visible,
-  description,
+  item,
   onClose,
 }) => {
   const { colors, fontSize } = useTheme();
+  
+  if (!item) return null;
 
   return (
     <Modal
@@ -32,6 +33,13 @@ const AudioDescriptionModal: React.FC<AudioDescriptionModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+          <Image
+            source={{ uri: item.imageUrl }}
+            style={styles.image}
+            accessibilityLabel="Imagem convertida"
+            resizeMode="cover"
+          />
+
           <Text 
             style={[
               styles.title, 
@@ -41,34 +49,39 @@ const AudioDescriptionModal: React.FC<AudioDescriptionModalProps> = ({
           >
             Áudio descrição:
           </Text>
-          
+
           <Text 
             style={[
-              styles.description, 
+              styles.date, 
+              { color: colors.text, fontSize: fontSize * 0.9 }
+            ]}
+          >
+            {formatDate(item.createdAt)}
+          </Text>
+
+          <Text 
+            style={[
+              styles.convertedText, 
               { color: colors.text, fontSize: fontSize }
             ]}
             accessibilityRole="text"
           >
-            {description}
-          </Text>
-          
-          <Text 
-            style={[
-              styles.info, 
-              { color: colors.text, fontSize: fontSize * 0.9 }
-            ]}
-          >
-            Essa conversão estará disponível no histórico.
+            {item.convertedText}
           </Text>
 
           <TouchableOpacity
             style={[styles.button, { borderColor: colors.text }]}
             onPress={onClose}
             accessibilityRole="button"
-            accessibilityLabel="Fechar modal"
-            accessibilityHint="Toque duas vezes para fechar a descrição do áudio"
+            accessibilityLabel="Fechar visualização"
+            accessibilityHint="Toque duas vezes para fechar a visualização do item"
           >
-            <Text style={[styles.buttonText, { color: colors.text, fontSize: fontSize }]}>
+            <Text 
+              style={[
+                styles.buttonText, 
+                { color: colors.text, fontSize: fontSize }
+              ]}
+            >
               Fechar
             </Text>
           </TouchableOpacity>
@@ -84,12 +97,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   modalContainer: {
-    width: '80%',
+    width: '100%',
     maxWidth: 400,
     borderRadius: 20,
-    padding: 24,
+    padding: 20,
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
@@ -100,23 +114,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 15,
+    marginBottom: 16,
+  },
   title: {
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 8,
   },
-  description: {
-    textAlign: 'center',
-    marginBottom: 16,
-    fontWeight: 'bold',
+  date: {
+    marginBottom: 8,
   },
-  info: {
+  convertedText: {
     textAlign: 'center',
     marginBottom: 24,
-  },
-  buttonContainer: {
-    width: '100%',
-    gap: 12,
+    paddingHorizontal: 10,
   },
   button: {
     width: '100%',
@@ -130,4 +144,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {AudioDescriptionModal};
+export default HistoryItemModal;

@@ -90,4 +90,36 @@ export async function deleteConversionUser(id: string) {
         }
     });
     return response;
+}
+
+export async function requestPasswordReset(email: string) {
+    const response = await axiosClient.post(`/token`, {email: email});
+    console.log(response)
+    await AsyncStorage.setItem('@token_user', response.data.passwordRedefinition.id)
+    return response;
+}
+
+
+export async function verifyCode(code: string) {
+    const tokenIdRecuperation = await AsyncStorage.getItem('@token_user');
+
+    const data  = {
+        tokenId: tokenIdRecuperation,
+        token: code
+    }
+
+    const response = await axiosClient.post(`/token/confirmed`, data);
+    return response;
+  }
+
+  export async function resetPassword(password: string) {
+    const tokenIdRecuperation = await AsyncStorage.getItem('@token_user');
+
+    const data  = {
+        tokenId: tokenIdRecuperation,
+        password: password
+    }
+
+    const response = await axiosClient.patch(`/token/new-credentials`, data);
+    return response;
   }

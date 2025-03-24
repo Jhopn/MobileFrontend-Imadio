@@ -40,7 +40,7 @@ export const colorSchemes: ColorScheme[] = [
     {
         id: '1',
         colors: {
-            background: '#e8e6ff', 
+            background: '#e8e6ff',
             text: '#000000',
             primary: '#9f90ff',
             value: Theme.STANDARD
@@ -50,8 +50,8 @@ export const colorSchemes: ColorScheme[] = [
     {
         id: '2',
         colors: {
-            background: '#FFFFFF', 
-            text: '#000000', 
+            background: '#FFFFFF',
+            text: '#000000',
             primary: '#B8860B',
             value: Theme.GOLDEN_EVENING
         },
@@ -60,8 +60,8 @@ export const colorSchemes: ColorScheme[] = [
     {
         id: '3',
         colors: {
-            background: '#CCCCCC', 
-            text: '#000000', 
+            background: '#CCCCCC',
+            text: '#000000',
             primary: '#008B8B',
             value: Theme.STAINLESS_STEEL_CYANO
         },
@@ -70,8 +70,8 @@ export const colorSchemes: ColorScheme[] = [
     {
         id: '4',
         colors: {
-            background: '#F2F2F2', 
-            text: '#000000', 
+            background: '#F2F2F2',
+            text: '#000000',
             primary: '#E65100',
             value: Theme.CARAMEL_ORANGE
         },
@@ -102,4 +102,11 @@ export interface ConfirmationModalProps {
     visible: boolean;
     onConfirm: () => void;
     onCancel: () => void;
+}
+
+export interface Configuration {
+    userId: string
+    theme: Theme
+    fontSize: string
+    createdAt: Date
 }

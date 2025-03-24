@@ -17,6 +17,7 @@ import { FileText, User } from 'react-native-feather';
 import { Link, router } from 'expo-router';
 import { useTheme } from '@/src/hooks/use-theme';
 import { useAuth } from '@/src/hooks/use-auth';
+import WaveSkateBackground from '@/src/components/common/wave-skate';
 
 const { width } = Dimensions.get('window');
 
@@ -210,15 +211,6 @@ const SignupForm = () => {
               </View>
             </View>
 
-            {/* Wave SVG */}
-            <View style={styles.waveContainer} importantForAccessibility="no">
-              <Svg height="100%" width="100%" viewBox="0 0 1440 320" style={styles.waveSvg}>
-                <Path
-                  fill="#9f90ff"
-                  d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-                />
-              </Svg>
-            </View>
           </LinearGradient>
 
           <View style={styles.lowerContainer}>
@@ -246,8 +238,8 @@ const SignupForm = () => {
 
             {responseMessage && (
               <View 
-                style={[
-                  styles.responseContainer,
+              style={[
+                styles.responseContainer,
                   responseMessage.type === 'success' ? styles.successContainer : styles.errorContainer
                 ]}
                 accessibilityLiveRegion="assertive"
@@ -262,6 +254,7 @@ const SignupForm = () => {
               </View>
             )}
 
+            <WaveSkateBackground height={150} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -284,13 +277,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 48,
     paddingHorizontal: 24,
-    paddingBottom: 100, // Space for the wave
+    paddingBottom: 100, 
     alignItems: 'center',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    fontStyle: 'italic',
     marginBottom: 32,
   },
   iconContainer: {
@@ -322,7 +314,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   input: {
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: '#000',
     paddingVertical: 8,
     paddingHorizontal: 0,
@@ -340,7 +332,6 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   lowerContainer: {
-    backgroundColor: '#9f90ff',
     paddingVertical: 48,
     paddingHorizontal: 24,
     alignItems: 'center',

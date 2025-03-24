@@ -3,6 +3,7 @@ export interface HistoryItem {
     date: string;
     convertedText: string;
     imageUrl: string;
+    createdAt: string;
   }
 
 export interface HistoryItemModalProps {

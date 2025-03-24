@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useTheme } from '@/src/hooks/use-theme';
-import { ConfirmationModal } from '@/src/components/screens/configuration/confirmation-modal';
-import HeaderConfiguration from '@/src/components/screens/configuration/tittle'; 
-import FontSizeSelector from '@/src/components/screens/configuration/font-size';
-import ColorSchemeSelector from '@/src/components/screens/configuration/color-schema-selection';
-import SaveButton from '@/src/components/screens/configuration/save-button'; 
-import { colorSchemes, ColorScheme } from '@/src/components/screens/configuration/interfaces/schemas'
+import { ConfirmationModal } from '@/src/components/configuration/confirmation-modal';
+import HeaderConfiguration from '@/src/components/configuration/tittle'; 
+import FontSizeSelector from '@/src/components/configuration/font-size';
+import ColorSchemeSelector from '@/src/components/configuration/color-schema-selection';
+import SaveButton from '@/src/components/configuration/save-button'; 
+import { colorSchemes, ColorScheme } from '@/src/components/configuration/interfaces/schemas'
 import { updateSettingsUser } from '@/src/server/api/api';
-import LogoutButton from '@/src/components/screens/configuration/logout-button';
+import LogoutButton from '@/src/components/configuration/logout-button';
 
 const ConfigurationScreen: React.FC = () => {
   const { colors, fontSize, setColors, setFontSize } = useTheme();
@@ -19,10 +19,7 @@ const ConfigurationScreen: React.FC = () => {
   const handleConfirmSave = async () => {
     setFontSize(tempFontSize);
     setColors(tempColors);
-
-
-    console.log('Configurações salvas permanentemente');
-
+    
     const updateSettings = {
       theme: tempColors.value,
       fontSize: String(fontSize),

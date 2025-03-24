@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import History from '@/src/components/screens/history/history'; 
-import { HistoryItem } from '@/src/components/screens/history/interfaces/schemas';
+import History from '@/src/components/history/history'; 
+import { HistoryItem } from '@/src/components/history/interfaces/schemas';
 import { getConversionUser, deleteConversionUser } from '@/src/server/api/api';
+
 
 const HistoryScreen: React.FC = () => {
   const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
@@ -18,7 +19,8 @@ const HistoryScreen: React.FC = () => {
       console.log('Dados recebidos da API:', response);
       
       if (response && response.data) {
-        setHistoryData(response.data);
+        const historyData = response.data as HistoryItem[];
+        setHistoryData(historyData);
       } else {
         setHistoryData([]);
       }

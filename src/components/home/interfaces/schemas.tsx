@@ -20,3 +20,10 @@ export interface ImageSelectorProps {
   height: number
   backgroundColor: string
 }
+
+export interface Conversion {
+    userId: string
+    convertedText: string
+    imageUrl: string
+    publicId: string
+}

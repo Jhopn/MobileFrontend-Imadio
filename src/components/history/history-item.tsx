@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-na
 import { HistoryItemPropsOnPress } from './interfaces/schemas';
 import { useTheme } from '@/src/hooks/use-theme';
 import { Trash2 } from 'react-native-feather'; // Importando ícone de lixeira
+import { formatDate } from '@/src/util/commom';
 
 // Atualizar a interface para incluir a função onDelete
 interface HistoryItemProps extends HistoryItemPropsOnPress {
@@ -11,35 +12,6 @@ interface HistoryItemProps extends HistoryItemPropsOnPress {
 
 const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) => {
   const { colors, fontSize } = useTheme();
-
-  // Função para formatar a data (remover o horário)
-  const formatDate = (dateString: string) => {
-    try {
-      // Verifica se a string de data contém um formato reconhecível
-      if (!dateString) return '';
-      
-      // Se for uma data ISO ou similar, podemos usar o Date
-      if (dateString.includes('T') || dateString.includes('-') || dateString.includes('/')) {
-        const date = new Date(dateString);
-        
-        // Verifica se a data é válida
-        if (isNaN(date.getTime())) {
-          // Se não for uma data válida, tenta extrair apenas a parte da data usando regex
-          const dateMatch = dateString.match(/(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}-\d{2})/);
-          return dateMatch ? dateMatch[0] : dateString;
-        }
-        
-        // Formata a data como DD/MM/YYYY
-        return date.toLocaleDateString('pt-BR');
-      }
-      
-      // Se não conseguir processar, retorna a string original
-      return dateString;
-    } catch (error) {
-      console.error('Erro ao formatar data:', error);
-      return dateString;
-    }
-  };
 
   // Função para confirmar exclusão
   const handleDelete = () => {
@@ -73,7 +45,7 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
         <Image
           source={{ uri: item.imageUrl }}
           style={styles.thumbnail}
-          defaultSource={require('../../../assets/images/icon.png')}
+          defaultSource={require('../../assets/images/icon.png')}
           accessible
           accessibilityLabel={`Imagem relacionada à descrição: ${item.convertedText}`}
         />

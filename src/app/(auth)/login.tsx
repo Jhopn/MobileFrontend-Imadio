@@ -18,6 +18,8 @@ import { Link, router } from "expo-router";
 import { FileText, User } from 'react-native-feather';
 import { useTheme } from '@/src/hooks/use-theme'; 
 import { useAuth } from '@/src/hooks/use-auth';
+import WaveBackground from '@/src/components/common/wave-balum';
+import WaveBalumBackground from '@/src/components/common/wave-balum';
 
 const { width } = Dimensions.get('window');
 
@@ -162,13 +164,15 @@ const LoginScreen = () => {
                 )}
               </View>
 
+              <Link href="/(auth)/forgot-password" asChild>
               <TouchableOpacity
-                accessibilityRole="button"
+                accessibilityRole="link"
                 accessibilityLabel="Esqueceu sua senha"
                 accessibilityHint="Toque para recuperar sua senha"
               >
                 <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
               </TouchableOpacity>
+              </Link>
 
               {/* Mensagem de resposta da API */}
               {responseMessage && (
@@ -222,8 +226,11 @@ const LoginScreen = () => {
                   </Text>
                 </TouchableOpacity>
               </Link>
+
+
               
             </View>
+              <WaveBalumBackground height={150} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -284,7 +291,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: '#000',
     paddingVertical: 8,
     fontSize: 16,
