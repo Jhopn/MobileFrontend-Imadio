@@ -1,7 +1,6 @@
-import { TouchableOpacity, StyleSheet, AccessibilityRole, Dimensions } from "react-native";
+import { TouchableOpacity, StyleSheet, AccessibilityRole, Dimensions, Text } from "react-native";
 import React from 'react';
 import { GestureResponderEvent } from "react-native";
-import { useAuth } from "@/src/hooks/use-auth";
 import { useTheme } from "@react-navigation/native";
 
 interface PropsButton {
@@ -15,33 +14,41 @@ interface PropsButton {
 const { width } = Dimensions.get('window');
 
 const Button: React.FC<PropsButton> = ({ children, onPress, role, label, hint }) => {
-  const {colors, fonts } = useTheme();
-  
+  const { colors, fonts } = useTheme();
 
-    return (
+
+  return (
     <TouchableOpacity
-      style={[styles.button, {backgroundColor: colors.background, borderColor: colors.text}]}
+      style={[styles.button, { backgroundColor: colors.background, borderColor: colors.text }]}
       onPress={onPress}
       accessibilityRole={role}
       accessibilityLabel={label}
       accessibilityHint={hint}
     >
-      {children}
+      <Text style={styles.buttonText}>
+        {children}
+      </Text>
     </TouchableOpacity>
   );
 };
 
 
 const styles = StyleSheet.create({
-    button: {
-        borderRadius: 30,
-        paddingVertical: 16,
-        maxWidth: 300,
-        width: width * 0.8,
-        borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }
+  button: {
+    borderRadius: 30,
+    paddingVertical: 16,
+    maxWidth: 300,
+    width: width * 0.8,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontFamily: "MontserratAlternativesMedium",
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+  },
 })
- 
+
 export default Button;

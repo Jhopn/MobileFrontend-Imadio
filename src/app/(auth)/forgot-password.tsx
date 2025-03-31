@@ -100,7 +100,7 @@ const ForgotPasswordScreen: React.FC = () => {
           hint="Toque para enviar o código de redefinição de senha para seu email"
           onPress={handleSendCode}
         >
-          <Text style={[styles.buttonText, {color: colors.text}]}>{isLoading ? "Enviando..." : "Enviar Código"}</Text>
+          {isLoading ? "Enviando..." : "Enviar Código"}
         </Button>
 
         <LinkButton
@@ -109,7 +109,7 @@ const ForgotPasswordScreen: React.FC = () => {
           hint="Toque para ir para a tela de cadastro"
           onPress={navigateToSignup}
         >
-          <Text style={[styles.signupText, {color: colors.text}]}>Não possui conta? Faça o cadastro!</Text>
+          Não possui conta? Faça o cadastro!
         </LinkButton>
       </FormContainer>
     </AuthLayout>
@@ -124,10 +124,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "MontserratAlternativesMedium",
   },
   signupText: {
     color: "#000",
     fontSize: 14,
+    fontFamily: "MontserratAlternativesRegular",
   },
 })
 

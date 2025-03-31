@@ -4,12 +4,12 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
   ScrollView,
 } from 'react-native';
 import { useTheme } from '@/src/hooks/use-theme';
 import { useRouter } from 'expo-router';
-import Svg, { Path } from 'react-native-svg';
+import WaveBalumBackground from '../components/common/wave-balum';
+import Button from '../components/common/button';
 
 const HowToUseScreen: React.FC = () => {
   const { colors, fontSize } = useTheme();
@@ -21,64 +21,50 @@ const HowToUseScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         bounces={false}
       >
         <View style={styles.content}>
-          <Text 
+          <Text
             style={[styles.title, { color: colors.text, fontSize: fontSize * 2 }]}
             accessibilityRole="header"
           >
-            Como usar?
+            Como Usar?
           </Text>
-          
-          <Text 
+
+          <Text
             style={[styles.subtitle, { color: colors.text, fontSize: fontSize * 1.1 }]}
             accessibilityRole="text"
           >
             Explicação de como utilizar o aplicativo
           </Text>
 
-          <Text 
+          <Text
             style={[styles.description, { color: colors.text, fontSize: fontSize }]}
             accessibilityRole="text"
           >
-            O Imadio é um aplicativo que permite a conversão de imagens em audiodescrição. 
-            Essas audiodescrições são salvas automaticamente. Para converter uma imagem 
-            basta clicar em escolher imagem e logo após em converter, uma mensagem 
+            O Imadio é um aplicativo que permite a conversão de imagens em audiodescrição.
+            Essas audiodescrições são salvas automaticamente. Para converter uma imagem
+            basta clicar em escolher imagem e logo após em converter, uma mensagem
             audiodescrita será reproduzida.{'\n\n'}
-            Após isso, caso queria ouvir novamente o que foi enviado, basta ir ao 
-            histórico navegar através das datas. Também possuímos a página de 
+            Após isso, caso queria ouvir novamente o que foi enviado, basta ir ao
+            histórico navegar através das datas. Também possuímos a página de
             personalização, onde é possível alterar o tema e o tamanho do texto.
           </Text>
         </View>
 
-        <TouchableOpacity
-          style={[styles.exitButton, { borderColor: colors.text }]}
-          onPress={handleExit}
-          accessibilityRole="button"
-          accessibilityLabel="Sair da tela de explicação"
-          accessibilityHint="Retorna para a tela anterior"
-        >
-          <Text style={[styles.exitButtonText, { color: colors.text, fontSize: fontSize * 1.2 }]}>
-            Sair
-          </Text>
-        </TouchableOpacity>
+        <View style={[styles.exitButton, { borderColor: colors.text }]} >
+          <Button
+            onPress={handleExit} hint='Retorna para a tela anterior' role='button' label='Sair da tela de explicação' >
+              Sair
+          </Button>
 
-        <View style={styles.waveContainer}>
-          <Svg
-            height="100%"
-            width="100%"
-            viewBox="0 0 1440 320"
-            style={styles.wave}
-          >
-            <Path
-              fill="#9f90ff"
-              d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            />
-          </Svg>
         </View>
+
+
+
+        <WaveBalumBackground color={colors.primary}/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -100,28 +86,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
+    fontFamily: "MontserratAlternativesMedium",
   },
   subtitle: {
     textAlign: 'center',
     marginBottom: 40,
+    fontFamily: "MontserratAlternativesRegular",
   },
   description: {
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 20,
+    fontFamily: "MontserratAlternativesMedium",
   },
   exitButton: {
     marginTop: 'auto',
-    marginBottom: 100, 
-    marginHorizontal: 24,
-    paddingVertical: 16,
-    borderWidth: 2,
-    borderRadius: 30,
+    marginBottom: 100,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  exitButtonText: {
-    fontWeight: 'bold',
   },
   waveContainer: {
     position: 'absolute',

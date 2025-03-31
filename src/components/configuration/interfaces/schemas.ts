@@ -88,9 +88,6 @@ export interface FontSizeSelectorProps {
 
 export interface SaveButtonProps {
     onPress: () => void;
-    backgroundColor: string;
-    textColor: string;
-    fontSize: number;
 }
 
 export interface HeaderProps {

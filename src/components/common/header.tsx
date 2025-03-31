@@ -1,7 +1,8 @@
 import type React from "react"
-import { View, Text, StyleSheet, Image } from "react-native"
+import { View, Text, StyleSheet, Image, AccessibilityInfo } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import ImadioLogo from "./logo-imadio"
+import { useEffect } from "react"
 
 interface HeaderProps {
   title: string
@@ -20,13 +21,17 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const { colors, fontSize } = useTheme()
 
+  useEffect(() => {
+    if (description) {
+      AccessibilityInfo.announceForAccessibility(description)
+    }
+  }, [description])
+
   return (
-    <View style={styles.header} accessibilityRole="header" accessible={true}>
+    <View style={styles.header}  accessible={true}>
       <Text
         style={[styles.title, { color: "#000", fontSize: fontSize * 1.8 }]}
-        accessibilityRole="header"
-        accessibilityLabel={titleAccessibilityLabel || title}
-        accessible={true}
+
       >
         {title}
       </Text>
@@ -39,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({
           style={styles.description}
           accessibilityLabel={descriptionAccessibilityLabel || description}
           accessibilityRole="text"
+          importantForAccessibility="yes"
           accessible={true}
         >
           {description}

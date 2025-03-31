@@ -55,12 +55,7 @@ const ConfigurationScreen: React.FC = () => {
           onSelectScheme={setTempColors}
         />
 
-        <SaveButton
-          onPress={handleSaveChanges}
-          backgroundColor={colors.primary}
-          textColor={colors.background}
-          fontSize={fontSize}
-        />
+        <SaveButton onPress={handleSaveChanges} />
 
         <LogoutButton
           primaryColor={colors.primary}

@@ -121,7 +121,7 @@ const LoginScreen = () => {
                   hint="Toque para recuperar sua senha"
                   onPress={() => {}}
                 >
-                  <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
+                  Esqueceu sua senha?
                 </LinkButton>
               </Link>
 
@@ -140,7 +140,7 @@ const LoginScreen = () => {
                 {isLoading ? (
                   <ActivityIndicator color="#000" size="small" accessibilityLabel="Carregando" />
                 ) : (
-                  <Text style={styles.buttonText}>Entrar</Text>
+                  <Text>Entrar</Text>
                 )}
               </Button>
 
@@ -151,9 +151,7 @@ const LoginScreen = () => {
                   hint="Toque para ir para a tela de cadastro se não tiver uma conta"
                   onPress={() => {}}
                 >
-                  <Text style={[styles.signupText, { color: colors.text, fontSize: fontSize * 0.8 }]}>
                     Não possui conta? Faça o cadastro!
-                  </Text>
                 </LinkButton>
               </Link>
             </View>
@@ -230,12 +228,6 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.7,
-  },
-  buttonText: {
-    fontFamily: "MontserratAlternativesMedium",
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
   },
   signupText: {
     marginTop: 24,

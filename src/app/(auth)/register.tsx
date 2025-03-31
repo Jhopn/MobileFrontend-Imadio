@@ -153,7 +153,7 @@ const SignupForm = () => {
               hint="Toque para criar sua conta"
               onPress={handleSubmit}
             >
-              <Text style={styles.buttonText}>Cadastro</Text>
+              Cadastro
             </Button>
 
             <Link href="/(auth)/login" asChild>
@@ -163,9 +163,7 @@ const SignupForm = () => {
                 hint="Toque para ir para a tela de login se já tiver uma conta"
                 onPress={() => { }}
               >
-                <Text style={[styles.loginText, { color: colors.background, fontSize: fontSize * 0.8 }]}>
                   Já tem conta? Faça login!
-                </Text>
               </LinkButton>
             </Link>
 
@@ -174,9 +172,9 @@ const SignupForm = () => {
               message={statusMessage}
               visible={showStatus}
             />
-            <WaveSkateBackground />
 
           </View>
+            <WaveSkateBackground />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -265,11 +263,6 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
   },
   loginText: {
     marginTop: 16,

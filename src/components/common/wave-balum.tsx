@@ -1,10 +1,13 @@
 import { useTheme } from '@react-navigation/native';
 import { View, Image, StyleSheet } from 'react-native';
 
-const WaveBalumBackground = () => {
-  
+interface PropsButton {
+  color?: string;
+}
+const WaveBalumBackground: React.FC<PropsButton> = ({ color = '#9f90ff' }) => {
+
   return (
-    <View style={{ 
+    <View style={{
       position: 'absolute',
       alignItems: 'center',
       justifyContent: 'flex-end',
@@ -12,7 +15,9 @@ const WaveBalumBackground = () => {
       height: '100%',
       zIndex: -1
     }}>
-          <Image source={require("../../assets/images/background/balum.png")}/>
+      <Image style={{
+        tintColor: color,
+      }} source={require("../../assets/images/background/balum.png")} />
     </View>
   );
 };

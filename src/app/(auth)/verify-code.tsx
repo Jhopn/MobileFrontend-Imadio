@@ -98,7 +98,7 @@ const VerifyCodeScreen: React.FC = () => {
           hint="Toque para verificar o código e prosseguir para redefinição de senha"
           onPress={() => handleVerifyCode()}
         >
-          <Text style={[styles.buttonText, {color: colors.text}]}>{isLoading ? "Verificando..." : "Verificar"}</Text>
+          {isLoading ? "Verificando..." : "Verificar"}
         </Button>
 
         <LinkButton
@@ -107,7 +107,7 @@ const VerifyCodeScreen: React.FC = () => {
           hint="Toque para receber um novo código por email"
           onPress={handleResendCode}
         >
-          <Text style={[styles.resendText, { color: colors.text }]}>Não recebeu o código? Reenviar</Text>
+          Não recebeu o código? Reenviar
         </LinkButton>
       </FormContainer>
     </AuthLayout>
@@ -121,14 +121,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     lineHeight: 22,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "MontserratAlternativesMedium",
   },
   resendText: {
     fontSize: 14,
+    fontFamily: "MontserratAlternativesRegular",
   },
 })
 

@@ -1,40 +1,26 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { SaveButtonProps } from './interfaces/schemas';
+import ButtonPrimary from '../common/button-primary';
 
 
 const SaveButton: React.FC<SaveButtonProps> = ({
   onPress,
-  backgroundColor,
-  textColor,
-  fontSize,
 }) => {
   return (
-    <TouchableOpacity
-      style={[styles.saveButton, { backgroundColor }]}
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel="Salvar Mudanças"
-      accessibilityHint="Toque duas vezes para confirmar as configurações"
-    >
-      <Text style={[styles.saveButtonText, { color: textColor, fontSize: fontSize * 1.2 }]}>
+    <View style={[styles.saveButton]} >
+      <ButtonPrimary onPress={onPress} label='Salvar Mudanças' role='button' hint='Toque duas vezes para confirmar as configurações'>
         Salvar Mudanças
-      </Text>
-    </TouchableOpacity>
+      </ButtonPrimary>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   saveButton: {
-    borderRadius: 30,
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24,
-  },
-  saveButtonText: {
-    fontWeight: 'bold',
-    fontFamily: "MontserratAlternativesMedium",
   },
 });
 

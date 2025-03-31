@@ -171,7 +171,7 @@ const ResetPasswordScreen: React.FC = () => {
           hint="Toque para confirmar a alteração de senha"
           onPress={handleResetPassword}
         >
-          <Text style={[styles.buttonText, {color: colors.text}]}>{isLoading ? "Alterando..." : "Alterar Senha"}</Text>
+          {isLoading ? "Alterando..." : "Alterar Senha"}
         </Button>
 
         <LinkButton
@@ -180,7 +180,7 @@ const ResetPasswordScreen: React.FC = () => {
           hint="Toque para ir para a tela de cadastro"
           onPress={navigateToSignup}
         >
-          <Text style={styles.signupText}>Não possui conta? Faça o cadastro!</Text>
+         Não possui conta? Faça o cadastro!
         </LinkButton>
       </FormContainer>
     </AuthLayout>
@@ -192,10 +192,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "MontserratAlternativesMedium",
   },
   signupText: {
     color: "#000",
     fontSize: 14,
+    fontFamily: "MontserratAlternativesRegular",
   },
 })
 
