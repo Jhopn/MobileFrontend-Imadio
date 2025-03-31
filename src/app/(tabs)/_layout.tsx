@@ -24,6 +24,7 @@ export default function TabLayout() {
           paddingBottom: 5,
         },
         tabBarLabelStyle: {
+          fontFamily: "MontserratAlternativesMedium",
           fontSize: fontSize * 0.7,
         },
         headerShown: false,

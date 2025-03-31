@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   exitButton: {
     marginTop: 'auto',
-    marginBottom: 100, // Espaço para a onda
+    marginBottom: 100, 
     marginHorizontal: 24,
     paddingVertical: 16,
     borderWidth: 2,

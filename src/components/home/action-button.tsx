@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: "bold",
+    fontFamily: "MontserratAlternativesMedium"
   },
   buttonTextDisabled: {
     color: "#666",

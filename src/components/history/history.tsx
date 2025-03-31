@@ -2,20 +2,11 @@ import React from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import HistoryItem from './history-item';
 import HistoryItemModal from './conversion-history-modal'; 
-import { HistoryItem as HistoryItemType } from './interfaces/schemas';
+import { HistoryProps } from './interfaces/schemas';
 import { useTheme } from '@/src/hooks/use-theme';
 import HeaderHistory from './tittle';
+import AccessibilityInstructions from '../common/accessibility-instructions';
 
-interface HistoryProps {
-  historyData: HistoryItemType[];
-  handleItemPress: (item: HistoryItemType) => void;
-  modalVisible: boolean;
-  selectedItem: HistoryItemType | null;
-  handleCloseModal: () => void;
-  isLoading?: boolean;
-  error?: string | null;
-  handleDeleteItem: (id: string) => void; // Nova prop para exclusão
-}
 
 const History: React.FC<HistoryProps> = ({
   historyData,
@@ -61,6 +52,9 @@ const History: React.FC<HistoryProps> = ({
         backgroundColor={colors.background}
         fontSize={fontSize} 
       />
+
+      <AccessibilityInstructions screenName="history" />
+
 
       <FlatList
         data={historyData}

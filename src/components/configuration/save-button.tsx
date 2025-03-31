@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesMedium",
   },
 });
 

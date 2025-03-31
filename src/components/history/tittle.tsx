@@ -30,10 +30,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
+    fontFamily: "MontserratAlternativesMedium",
   },
   subtitle: {
     textAlign: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
+    fontFamily: "MontserratAlternativesRegular"
   },
 });
 

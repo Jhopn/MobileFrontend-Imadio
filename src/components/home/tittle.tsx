@@ -29,8 +29,11 @@ const styles = StyleSheet.create({
     padding: "4%",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center'
   },
   infoButton: {
+    position: 'absolute',
+    left: '5%',
     padding: "2%",
   },
   titleContainer: {
@@ -38,9 +41,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
+    textAlign: 'center',
+    fontFamily: "MontserratAlternativesMedium"
   },
   subtitle: {
+    textAlign: 'center',
     marginTop: "1%",
+    fontFamily: "MontserratAlternativesRegular"
   },
 })
 

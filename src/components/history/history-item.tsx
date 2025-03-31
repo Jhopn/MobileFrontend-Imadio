@@ -67,7 +67,6 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
         </View>
       </TouchableOpacity>
       
-      {/* Botão de excluir */}
       <TouchableOpacity
         style={[styles.deleteButton, { backgroundColor: colors.primary }]}
         onPress={handleDelete}
@@ -108,13 +107,15 @@ const styles = StyleSheet.create({
   itemContent: {
     flex: 1,
     marginLeft: 12,
-    marginRight: 30, // Espaço para o botão de excluir
+    marginRight: 30, 
   },
   date: {
     marginBottom: 4,
+    fontFamily: "MontserratAlternativesMedium",
   },
   convertedText: {
     lineHeight: 22,
+    fontFamily: "MontserratAlternativesRegular",
   },
   deleteButton: {
     position: 'absolute',

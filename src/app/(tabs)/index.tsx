@@ -12,6 +12,7 @@ import { useAuth } from "@/src/hooks/use-auth"
 import LoadingScreen from "@/src/components/loading/loading"
 import { postConversionUser } from "@/src/server/api/api"
 import { Conversion } from "@/src/components/home/interfaces/schemas";
+import AccessibilityInstructions from "@/src/components/common/accessibility-instructions";
 
 const HomeScreen: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -54,7 +55,6 @@ const HomeScreen: React.FC = () => {
       
   
       const response = await postConversionUser(formData);
-      console.log('Resposta da API:', response);
       
       if (response && response.data) {
         const conversionData = response.data as Conversion
@@ -95,6 +95,8 @@ const HomeScreen: React.FC = () => {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} bounces={false}>
         <HeaderHome onInfoPress={handleInfoPress} textColor={colors.text} fontSize={fontSize} />
+
+        <AccessibilityInstructions screenName="home" />
 
         <View style={[styles.content, isLandscape && styles.contentLandscape]}>
           <ImageSelector

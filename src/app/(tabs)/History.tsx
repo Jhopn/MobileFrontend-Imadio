@@ -16,7 +16,6 @@ const HistoryScreen: React.FC = () => {
     try {
       setIsLoading(true);
       const response = await getConversionUser();
-      console.log('Dados recebidos da API:', response);
       
       if (response && response.data) {
         const historyData = response.data as HistoryItem[];

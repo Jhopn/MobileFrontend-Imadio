@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   Dimensions,
@@ -12,14 +10,17 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Link, router } from "expo-router";
 import { FileText, User } from 'react-native-feather';
 import { useTheme } from '@/src/hooks/use-theme'; 
 import { useAuth } from '@/src/hooks/use-auth';
-import WaveBackground from '@/src/components/common/wave-balum';
 import WaveBalumBackground from '@/src/components/common/wave-balum';
+import Button from '@/src/components/common/button';
+import LinkButton from '@/src/components/common/link-button';
+import LoginForm from '@/src/components/login/form-login'; 
+import StatusMessage from '@/src/components/common/status-message';
+import ImadioLogo from '@/src/components/common/logo-imadio';
+import AccessibilityInstructions from '@/src/components/common/accessibility-instructions';
 
 const { width } = Dimensions.get('window');
 
@@ -27,21 +28,21 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const { colors, fontSize } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const [responseMessage, setResponseMessage] = useState<{ type: 'success' | 'error'; message: string; } | null>(null);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState<"success" | "error" | "info">("info");
+  const [showStatus, setShowStatus] = useState(false);
   const [formData, setFormData] = useState({email: '', password: ''});
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
 
   const validateForm = () => {
     const newErrors: {email?: string; password?: string} = {};
     
-    // Validação do email
     if (!formData.email.trim()) {
       newErrors.email = 'Email é obrigatório';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email inválido';
     }
     
-    // Validação da senha
     if (!formData.password) {
       newErrors.password = 'Senha é obrigatória';
     }
@@ -51,10 +52,8 @@ const LoginScreen = () => {
   };
 
   const handleLogin = async () => {
-    // Limpa mensagens anteriores
-    setResponseMessage(null);
+    setShowStatus(false);
     
-    // Valida o formulário
     if (!validateForm()) {
       return;
     }
@@ -64,13 +63,10 @@ const LoginScreen = () => {
       
       const response = await login(formData);
       
-      // Mostra mensagem de sucesso
-      setResponseMessage({
-        type: 'success',
-        message: 'Login realizado com sucesso!'
-      });
+      setStatusMessage('Login realizado com sucesso!');
+      setStatusType('success');
+      setShowStatus(true);
       
-      // Redireciona para a tela principal após 1 segundo
       setTimeout(() => {
         router.replace('/(tabs)');
       }, 2000);
@@ -78,13 +74,18 @@ const LoginScreen = () => {
     } catch (error: any) {
       console.error('Erro no login:', error);
       
-      // Mostra mensagem de erro
-      setResponseMessage({
-        type: 'error',
-        message: error.response.data.message  || 'Falha no login. Verifique suas credenciais e tente novamente.'
-      });
+      setStatusMessage(error.response?.data?.message || 'Falha no login. Verifique suas credenciais e tente novamente.');
+      setStatusType('error');
+      setShowStatus(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({...prev, [field]: value}));
+    if (errors[field as keyof typeof errors]) {
+      setErrors(prev => ({...prev, [field]: undefined}));
     }
   };
 
@@ -101,137 +102,63 @@ const LoginScreen = () => {
         >
           <View style={styles.content}>
             <Text style={styles.title} accessibilityRole="header">Login</Text>
-
-            <View style={styles.iconContainer} accessibilityLabel="Ícones do aplicativo IMADIO" importantForAccessibility="no">
-              <FileText width={20} height={20} color="#000" />
-              <View style={styles.line} />
-              <User width={20} height={20} color="#000" />
-            </View>
-
-            <Text style={styles.logoText} accessibilityLabel="IMADIO" accessibilityRole="text">IMADIO</Text>
+            <AccessibilityInstructions screenName="login" />
+            <ImadioLogo/>
 
             <View style={styles.formContainer}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, errors.email && { borderBottomColor: 'red' }]}
-                  placeholder="Digite seu email..."
-                  placeholderTextColor="#000"
-                  keyboardType="email-address"
-                  value={formData.email}
-                  onChangeText={(text) => {
-                    setFormData(prev => ({...prev, email: text}));
-                    if (errors.email) setErrors(prev => ({...prev, email: undefined}));
-                  }}
-                  autoCapitalize="none"
-                  accessibilityLabel="Campo de email"
-                  accessibilityHint="Digite seu endereço de email"
-                  accessibilityRole="text"
-                />
-                {errors.email && (
-                  <Text 
-                    style={styles.errorText} 
-                    accessibilityLabel={`Erro: ${errors.email}`}
-                    accessibilityLiveRegion="polite"
-                  >
-                    {errors.email}
-                  </Text>
-                )}
-              </View>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, errors.password && { borderBottomColor: 'red' }]}
-                  placeholder="Digite sua senha..."
-                  placeholderTextColor="#000"
-                  secureTextEntry
-                  value={formData.password}
-                  onChangeText={(text) => {
-                    setFormData(prev => ({...prev, password: text}));
-                    if (errors.password) setErrors(prev => ({...prev, password: undefined}));
-                  }}
-                  accessibilityLabel="Campo de senha"
-                  accessibilityHint="Digite sua senha"
-                  accessibilityRole="text"
-                />
-                {errors.password && (
-                  <Text 
-                    style={styles.errorText}
-                    accessibilityLabel={`Erro: ${errors.password}`}
-                    accessibilityLiveRegion="polite"
-                  >
-                    {errors.password}
-                  </Text>
-                )}
-              </View>
+              <LoginForm 
+                email={formData.email}
+                password={formData.password}
+                errors={errors}
+                onChangeEmail={(text) => handleInputChange('email', text)}
+                onChangePassword={(text) => handleInputChange('password', text)}
+              />
 
               <Link href="/(auth)/forgot-password" asChild>
-              <TouchableOpacity
-                accessibilityRole="link"
-                accessibilityLabel="Esqueceu sua senha"
-                accessibilityHint="Toque para recuperar sua senha"
-              >
-                <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
-              </TouchableOpacity>
+                <LinkButton
+                  role="link"
+                  label="Esqueceu sua senha"
+                  hint="Toque para recuperar sua senha"
+                  onPress={() => {}}
+                >
+                  <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
+                </LinkButton>
               </Link>
 
-              {/* Mensagem de resposta da API */}
-              {responseMessage && (
-                <View 
-                  style={[
-                    styles.responseContainer, 
-                    responseMessage.type === 'success' ? styles.successContainer : styles.errorContainer
-                  ]}
-                  accessibilityLiveRegion="assertive"
-                  accessibilityLabel={responseMessage.type === 'success' ? 'Mensagem de sucesso' : 'Mensagem de erro'}
-                >
-                  <Text style={[
-                    styles.responseText,
-                    responseMessage.type === 'success' ? styles.successText : styles.errorText
-                  ]}>
-                    {responseMessage.message}
-                  </Text>
-                </View>
-              )}
+              <StatusMessage 
+                type={statusType}
+                message={statusMessage}
+                visible={showStatus}
+              />
 
-              <TouchableOpacity 
-                style={[styles.button, isLoading && styles.buttonDisabled]} 
+              <Button
+                role="button"
+                label="Botão de login"
+                hint="Toque para fazer login"
                 onPress={handleLogin}
-                disabled={isLoading}
-                accessibilityRole="button"
-                accessibilityLabel="Botão de login"
-                accessibilityHint="Toque para fazer login"
-                accessibilityState={{ disabled: isLoading }}
               >
                 {isLoading ? (
                   <ActivityIndicator color="#000" size="small" accessibilityLabel="Carregando" />
                 ) : (
                   <Text style={styles.buttonText}>Entrar</Text>
                 )}
-              </TouchableOpacity>
-
-              <TouchableOpacity>
-                <Text style={styles.signupText}>
-                  
-                </Text>
-              </TouchableOpacity>
+              </Button>
 
               <Link href="/(auth)/register" asChild>
-                <TouchableOpacity
-                  accessibilityRole="link"
-                  accessibilityLabel="Ir para tela de cadastro"
-                  accessibilityHint="Toque para ir para a tela de cadastro se não tiver uma conta"
+                <LinkButton
+                  role="link"
+                  label="Ir para tela de cadastro"
+                  hint="Toque para ir para a tela de cadastro se não tiver uma conta"
+                  onPress={() => {}}
                 >
-                  <Text style={[styles.signupText, { color: colors.primary, fontSize: fontSize * 0.8 }]}>
-                  Não possui conta? Faça o cadastro!
+                  <Text style={[styles.signupText, { color: colors.text, fontSize: fontSize * 0.8 }]}>
+                    Não possui conta? Faça o cadastro!
                   </Text>
-                </TouchableOpacity>
+                </LinkButton>
               </Link>
-
-
-              
             </View>
-              <WaveBalumBackground height={150} />
           </View>
+          <WaveBalumBackground/>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -251,34 +178,21 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 24,
+    padding: 14,
     alignItems: 'center',
   },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesMedium",
     marginTop: 40,
     marginBottom: 32,
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#e0dcff',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 24,
   },
   line: {
     width: 48,
     height: 2,
     backgroundColor: '#000',
     marginHorizontal: 8,
-  },
-  logoText: {
-    fontSize: 14,
-    letterSpacing: 4,
-    textTransform: 'uppercase',
-    marginBottom: 48,
   },
   formContainer: {
     width: '100%',
@@ -301,6 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     fontSize: 16,
     color: '#000',
+    fontFamily: "MontserratAlternativesMedium",
   },
   button: {
     backgroundColor: '#fff',
@@ -317,14 +232,16 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
+    fontFamily: "MontserratAlternativesMedium",
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
   },
   signupText: {
     marginTop: 24,
-    fontSize: 16,
+    fontSize: 18,
     color: '#000',
+    fontFamily: "MontserratAlternativesRegular",
   },
   waveContainer: {
     position: 'absolute',
@@ -337,7 +254,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
-  // Novos estilos para mensagens de erro e resposta
   errorText: {
     color: 'red',
     fontSize: 12,

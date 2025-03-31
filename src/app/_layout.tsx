@@ -6,12 +6,13 @@ import "react-native-reanimated"
 import { ThemeProvider } from "../providers/themes/theme-provider"
 import { AuthProvider } from "../providers/auth/auth-provider" 
 
-// Impede a SplashScreen de esconder antes do carregamento completo.
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/MontserratAlternates-Light.ttf"),
+    MontserratAlternativesRegular: require("../assets/fonts/MontserratAlternates-Regular.ttf"),
+    MontserratAlternativesLight: require("../assets/fonts/MontserratAlternates-Light.ttf"),
+    MontserratAlternativesMedium: require("../assets/fonts/MontserratAlternates-Medium.ttf"),
   })
 
   useEffect(() => {
@@ -24,7 +25,6 @@ export default function RootLayout() {
     return null
   }
 
-  // Importante: Use Slot em vez de Stack no Root Layout
   return (
     <AuthProvider>
       <ThemeProvider>

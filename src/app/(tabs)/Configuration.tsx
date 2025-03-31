@@ -9,6 +9,7 @@ import SaveButton from '@/src/components/configuration/save-button';
 import { colorSchemes, ColorScheme } from '@/src/components/configuration/interfaces/schemas'
 import { updateSettingsUser } from '@/src/server/api/api';
 import LogoutButton from '@/src/components/configuration/logout-button';
+import AccessibilityInstructions from '@/src/components/common/accessibility-instructions';
 
 const ConfigurationScreen: React.FC = () => {
   const { colors, fontSize, setColors, setFontSize } = useTheme();
@@ -26,7 +27,6 @@ const ConfigurationScreen: React.FC = () => {
     }
 
     const response = await updateSettingsUser(updateSettings)
-    console.log(response)
     setShowConfirmModal(false);
   };
 
@@ -38,6 +38,8 @@ const ConfigurationScreen: React.FC = () => {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
         <HeaderConfiguration textColor={colors.text} fontSize={fontSize} />
+
+        <AccessibilityInstructions screenName="settings" />
 
         <FontSizeSelector
           fontSize={fontSize}

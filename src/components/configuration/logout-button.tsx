@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     fontWeight: '600',
+    fontFamily: "MontserratAlternativesMedium",
   }
 });
 

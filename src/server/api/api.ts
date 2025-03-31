@@ -1,7 +1,7 @@
 import { BASE_URL } from '@/src/constants/api-url';
 import { Credentials, User } from '@/src/providers/auth/interfaces/schemas';
 import axios from 'axios';
-import { CreateConversion, UpdateSettings } from '../interfaces/schema';
+import { UpdateSettings } from '../interfaces/schema';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -23,7 +23,6 @@ export async function updateSettingsUser(data: UpdateSettings) {
     const tokenStorage = await AsyncStorage.getItem('@auth_token');
     const tokenWithout= tokenStorage?.replaceAll('"', '')
 
-    console.log(tokenWithout)
     const response = await axiosClient.patch("/settings", data,{ 
         headers:{
             'Authorization': `Bearer ${tokenWithout}`,
@@ -94,7 +93,6 @@ export async function deleteConversionUser(id: string) {
 
 export async function requestPasswordReset(email: string) {
     const response = await axiosClient.post(`/token`, {email: email});
-    console.log(response)
     await AsyncStorage.setItem('@token_user', response.data.passwordRedefinition.id)
     return response;
 }

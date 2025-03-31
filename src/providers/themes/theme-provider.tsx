@@ -7,7 +7,6 @@ import { colorSchemes, Configuration } from "@/src/components/configuration/inte
 
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-
   const [colors, setColors] = useState<ThemeColors>(defaultTheme);
   const [fontSize, setFontSize] = useState<number>(16);
 
@@ -18,7 +17,6 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         
         if (token) {
           const response = await getSettingsUser();
-          console.log(response)
           
           if (response && response.data) {
             const configurationData = response.data as Configuration
@@ -31,7 +29,6 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             }
             
             if (configurationData.fontSize) {
-              console.log(response.data)
               const fontSizeStored = Number(configurationData.fontSize)
               setFontSize(fontSizeStored);
             }

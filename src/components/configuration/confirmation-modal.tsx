@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 16,
+    fontFamily: "MontserratAlternativesMedium",
   },
   description: {
     textAlign: 'center',
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesRegular",
   },
 });
 

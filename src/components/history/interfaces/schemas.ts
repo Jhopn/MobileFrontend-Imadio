@@ -34,3 +34,14 @@ export interface HistoryItemModalProps {
     selectedItem: HistoryItem | null;
     handleCloseModal: () => void;
   }
+
+export interface HistoryProps {
+  historyData: HistoryItem[];
+  handleItemPress: (item: HistoryItem) => void;
+  modalVisible: boolean;
+  selectedItem: HistoryItem | null;
+  handleCloseModal: () => void;
+  isLoading?: boolean;
+  error?: string | null;
+  handleDeleteItem: (id: string) => void; 
+}

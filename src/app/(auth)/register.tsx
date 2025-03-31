@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   Dimensions,
@@ -11,25 +9,32 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FileText, User } from 'react-native-feather';
 import { Link, router } from 'expo-router';
 import { useTheme } from '@/src/hooks/use-theme';
 import { useAuth } from '@/src/hooks/use-auth';
 import WaveSkateBackground from '@/src/components/common/wave-skate';
+import Button from '@/src/components/common/button';
+import LinkButton from '@/src/components/common/link-button';
+import SignupFormFields from '@/src/components/register/sing-in-up';
+import StatusMessage from '@/src/components/common/status-message';
+import ImadioLogo from '@/src/components/common/logo-imadio';
+import AccessibilityInstructions from '@/src/components/common/accessibility-instructions';
 
 const { width } = Dimensions.get('window');
 
 const SignupForm = () => {
   const { register } = useAuth();
   const { colors, fontSize } = useTheme();
-  const [responseMessage, setResponseMessage] = useState<{ type: 'success' | 'error'; message: string; } | null>(null);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState<"success" | "error" | "info">("info");
+  const [showStatus, setShowStatus] = useState(false);
   const [errors, setErrors] = useState<{
-      name?: string;
-      email?: string;
-      password?: string;
-      confirmPassword?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
   }>({});
 
   const [formData, setFormData] = useState({
@@ -41,37 +46,33 @@ const SignupForm = () => {
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-    
+
     // Validação do nome
     if (!formData.name.trim()) {
       newErrors.name = 'Nome é obrigatório';
     }
-    
-    // Validação do email
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email é obrigatório';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email inválido';
     }
-    
-    // Validação da senha
+
     if (!formData.password) {
       newErrors.password = 'Senha é obrigatória';
     } else if (formData.password.length < 6) {
       newErrors.password = 'A senha deve ter pelo menos 6 caracteres';
     }
-    
-    // Validação da confirmação de senha
+
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'As senhas não coincidem';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -79,8 +80,6 @@ const SignupForm = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log('Form submitted:', formData);
-
       const userData = {
         name: formData.name,
         email: formData.email,
@@ -94,14 +93,9 @@ const SignupForm = () => {
 
       const response = await register(userData)
 
-      console.log(response);
-
-
-      // Mostra mensagem de sucesso
-      setResponseMessage({
-        type: 'success',
-        message: 'Conta criada com sucesso!'
-      });
+      setStatusMessage('Conta criada com sucesso!');
+      setStatusType('success');
+      setShowStatus(true);
 
       // Limpa o formulário após sucesso
       setFormData({
@@ -111,16 +105,14 @@ const SignupForm = () => {
         confirmPassword: ''
       });
 
-    
       setTimeout(() => {
         router.replace('/(auth)/login');
       }, 2000);
 
     } catch (error: any) {
-      setResponseMessage({
-        type: 'error',
-        message: error.response.data.message || 'Ocorreu um erro ao criar sua conta. Tente novamente.'
-      });
+      setStatusMessage(error.response?.data?.message || 'Ocorreu um erro ao criar sua conta. Tente novamente.');
+      setStatusType('error');
+      setShowStatus(true);
     }
   };
 
@@ -130,131 +122,60 @@ const SignupForm = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
       >
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
           accessibilityLabel="Formulário de cadastro"
         >
-          <LinearGradient
-            colors={['#e8e6ff', '#e8e6ff']}
+          <View
             style={styles.upperContainer}
           >
             <Text style={styles.title} accessibilityRole="header">Criar Conta</Text>
+            <AccessibilityInstructions screenName="register" />
 
-            <View style={styles.iconContainer} accessibilityLabel="Ícones do aplicativo IMADIO" importantForAccessibility="no">
-              <FileText width={20} height={20} color="#000" />
-              <View style={styles.line} />
-              <User width={20} height={20} color="#000" />
-            </View>
+            <ImadioLogo />
 
-            <Text style={styles.logoText} accessibilityLabel="IMADIO" accessibilityRole="text">IMADIO</Text>
 
             <View style={styles.formContainer}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite seu nome..."
-                  placeholderTextColor="#000"
-                  value={formData.name}
-                  onChangeText={(text) => handleChange('name', text)}
-                  accessibilityLabel="Campo de nome"
-                  accessibilityHint="Digite seu nome completo"
-                  accessibilityRole="text"
-                />
-                {errors.name && <Text style={styles.errorText} accessibilityLabel={`Erro: ${errors.name}`} accessibilityLiveRegion="polite">{errors.name}</Text>}
-              </View>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite seu email..."
-                  placeholderTextColor="#000"
-                  keyboardType="email-address"
-                  value={formData.email}
-                  onChangeText={(text) => handleChange('email', text)}
-                  accessibilityLabel="Campo de email"
-                  accessibilityHint="Digite seu endereço de email"
-                  accessibilityRole="text"
-                  autoCapitalize="none"
-                />
-                {errors.email && <Text style={styles.errorText} accessibilityLabel={`Erro: ${errors.email}`} accessibilityLiveRegion="polite">{errors.email}</Text>}
-              </View>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite sua senha..."
-                  placeholderTextColor="#000"
-                  secureTextEntry
-                  value={formData.password}
-                  onChangeText={(text) => handleChange('password', text)}
-                  accessibilityLabel="Campo de senha"
-                  accessibilityHint="Digite sua senha com pelo menos 6 caracteres"
-                  accessibilityRole="text"
-                />
-                {errors.password && <Text style={styles.errorText} accessibilityLabel={`Erro: ${errors.password}`} accessibilityLiveRegion="polite">{errors.password}</Text>}
-              </View>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite a mesma senha..."
-                  placeholderTextColor="#000"
-                  secureTextEntry
-                  value={formData.confirmPassword}
-                  onChangeText={(text) => handleChange('confirmPassword', text)}
-                  accessibilityLabel="Campo de confirmação de senha"
-                  accessibilityHint="Digite a mesma senha novamente para confirmar"
-                  accessibilityRole="text"
-                />
-                {errors.confirmPassword && <Text style={styles.errorText} accessibilityLabel={`Erro: ${errors.confirmPassword}`} accessibilityLiveRegion="polite">{errors.confirmPassword}</Text>}
-              </View>
+              <SignupFormFields
+                formData={formData}
+                errors={errors}
+                handleChange={handleChange}
+              />
             </View>
 
-          </LinearGradient>
+          </View>
 
           <View style={styles.lowerContainer}>
-            <TouchableOpacity 
-              style={styles.button} 
+            <Button
+              role="button"
+              label="Botão de cadastro"
+              hint="Toque para criar sua conta"
               onPress={handleSubmit}
-              accessibilityRole="button"
-              accessibilityLabel="Botão de cadastro"
-              accessibilityHint="Toque para criar sua conta"
             >
               <Text style={styles.buttonText}>Cadastro</Text>
-            </TouchableOpacity>
+            </Button>
 
             <Link href="/(auth)/login" asChild>
-              <TouchableOpacity
-                accessibilityRole="link"
-                accessibilityLabel="Ir para tela de login"
-                accessibilityHint="Toque para ir para a tela de login se já tiver uma conta"
+              <LinkButton
+                role="link"
+                label="Ir para tela de login"
+                hint="Toque para ir para a tela de login se já tiver uma conta"
+                onPress={() => { }}
               >
                 <Text style={[styles.loginText, { color: colors.background, fontSize: fontSize * 0.8 }]}>
                   Já tem conta? Faça login!
                 </Text>
-              </TouchableOpacity>
+              </LinkButton>
             </Link>
 
-            {responseMessage && (
-              <View 
-              style={[
-                styles.responseContainer,
-                  responseMessage.type === 'success' ? styles.successContainer : styles.errorContainer
-                ]}
-                accessibilityLiveRegion="assertive"
-                accessibilityLabel={responseMessage.type === 'success' ? 'Mensagem de sucesso' : 'Mensagem de erro'}
-              >
-                <Text style={[
-                  styles.responseText,
-                  responseMessage.type === 'success' ? styles.successText : styles.errorText
-                ]}>
-                  {responseMessage.message}
-                </Text>
-              </View>
-            )}
+            <StatusMessage
+              type={statusType}
+              message={statusMessage}
+              visible={showStatus}
+            />
+            <WaveSkateBackground />
 
-            <WaveSkateBackground height={150} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -277,13 +198,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 48,
     paddingHorizontal: 24,
-    paddingBottom: 100, 
+    paddingBottom: 80,
     alignItems: 'center',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 32,
+    fontFamily: "MontserratAlternativesMedium",
   },
   iconContainer: {
     flexDirection: 'row',
@@ -332,7 +254,6 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   lowerContainer: {
-    paddingVertical: 48,
     paddingHorizontal: 24,
     alignItems: 'center',
   },
@@ -354,6 +275,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     color: '#000',
+    fontFamily: "MontserratAlternativesMedium",
   },
   responseContainer: {
     padding: 10,

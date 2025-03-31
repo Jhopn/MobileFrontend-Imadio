@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: 'bold',
     marginBottom: 16,
+    fontFamily: "MontserratAlternativesMedium",
   },
   sliderContainer: {
     flexDirection: 'row',
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
   },
   sliderLabel: {
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesRegular",
   },
 });
 

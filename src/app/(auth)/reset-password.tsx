@@ -1,26 +1,20 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Alert,
-  AccessibilityInfo,
-} from "react-native"
+import { Text, StyleSheet, Alert, AccessibilityInfo, Platform } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import { useRouter, useLocalSearchParams } from "expo-router"
-import { resetPassword } from "@/src/server/api/api" // Ajuste conforme sua API
-import WaveBalumBackground from "@/src/components/common/wave-balum"
+import { resetPassword } from "@/src/server/api/api"
 import StatusMessage from "@/src/components/common/status-message"
+import AuthLayout from "@/src/components/common/auth-layout" 
+import Header from "@/src/components/common/header" 
+import FormInput from "@/src/components/common/form-input" 
+import FormContainer from "@/src/components/common/form-container" 
+import AccessibilityInstructions from "@/src/components/common/accessibility-instructions" 
+import LinkButton from "@/src/components/common/link-button"
+import Button from "@/src/components/common/button"
 
 const ResetPasswordScreen: React.FC = () => {
-  const { colors, fontSize } = useTheme()
+  const { colors } = useTheme()
   const router = useRouter()
   const params = useLocalSearchParams()
   const token = params.token as string
@@ -28,6 +22,8 @@ const ResetPasswordScreen: React.FC = () => {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [passwordError, setPasswordError] = useState("")
+  const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
   // Estados para mensagens de status
   const [statusMessage, setStatusMessage] = useState("")
@@ -39,51 +35,59 @@ const ResetPasswordScreen: React.FC = () => {
     if (showStatus) {
       setShowStatus(false)
     }
+    if (passwordError) {
+      setPasswordError("")
+    }
+    if (confirmPasswordError) {
+      setConfirmPasswordError("")
+    }
   }, [password, confirmPassword])
 
+  // Função para anunciar mensagens para leitores de tela
+  const announceMessage = (message: string) => {
+    if (Platform.OS === "ios" || Platform.OS === "android") {
+      AccessibilityInfo.announceForAccessibility(message)
+    }
+  }
+
+  const validateForm = () => {
+    let isValid = true
+
+    if (!password.trim()) {
+      setPasswordError("Por favor, digite sua nova senha")
+      isValid = false
+    } else if (password.length < 6) {
+      setPasswordError("A senha deve ter pelo menos 6 caracteres")
+      isValid = false
+    }
+
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Por favor, confirme sua senha")
+      isValid = false
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("As senhas não coincidem")
+      isValid = false
+    }
+
+    return isValid
+  }
+
   const handleResetPassword = async () => {
-    if (!password.trim() || !confirmPassword.trim()) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos", undefined, {
-        cancelable: true,
-        onDismiss: () => {
-          // Anuncia para leitores de tela
-          if (Platform.OS === "ios") {
-            AccessibilityInfo.announceForAccessibility("Erro: Por favor, preencha todos os campos")
-          }
-        },
-      })
-      return
-    }
-
-    if (password !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem", undefined, {
-        cancelable: true,
-        onDismiss: () => {
-          if (Platform.OS === "ios") {
-            AccessibilityInfo.announceForAccessibility("Erro: As senhas não coincidem")
-          }
-        },
-      })
-      return
-    }
-
-    if (password.length < 6) {
-      Alert.alert("Erro", "A senha deve ter pelo menos 6 caracteres", undefined, {
-        cancelable: true,
-        onDismiss: () => {
-          if (Platform.OS === "ios") {
-            AccessibilityInfo.announceForAccessibility("Erro: A senha deve ter pelo menos 6 caracteres")
-          }
-        },
-      })
+    if (!validateForm()) {
       return
     }
 
     try {
       setIsLoading(true)
+      announceMessage("Processando sua solicitação, por favor aguarde...")
+
       const response = await resetPassword(password)
 
       if (response.status === 200) {
+        setStatusMessage("Sua senha foi alterada com sucesso")
+        setStatusType("success")
+        setShowStatus(true)
+
         Alert.alert(
           "Senha alterada",
           "Sua senha foi alterada com sucesso",
@@ -91,9 +95,7 @@ const ResetPasswordScreen: React.FC = () => {
             {
               text: "OK",
               onPress: () => {
-                if (Platform.OS === "ios") {
-                  AccessibilityInfo.announceForAccessibility("Sucesso: Sua senha foi alterada com sucesso")
-                }
+                announceMessage("Redirecionando para a tela de login")
                 setTimeout(() => router.push("/(auth)/login"), 500)
               },
             },
@@ -101,21 +103,24 @@ const ResetPasswordScreen: React.FC = () => {
           {
             cancelable: false,
             onDismiss: () => {
-              if (Platform.OS === "ios") {
-                AccessibilityInfo.announceForAccessibility("Sucesso: Sua senha foi alterada com sucesso")
-              }
+              announceMessage("Sucesso: Sua senha foi alterada com sucesso")
             },
           },
         )
       }
     } catch (error) {
       console.error("Erro ao redefinir senha:", error)
+
+      setStatusMessage("Não foi possível redefinir sua senha. Tente novamente.")
+      setStatusType("error")
+      setShowStatus(true)
+
+      announceMessage("Erro: Não foi possível redefinir sua senha. Tente novamente.")
+
       Alert.alert("Erro", "Não foi possível redefinir sua senha. Tente novamente.", undefined, {
         cancelable: true,
         onDismiss: () => {
-          if (Platform.OS === "ios") {
-            AccessibilityInfo.announceForAccessibility("Erro: Não foi possível redefinir sua senha. Tente novamente.")
-          }
+          announceMessage("Erro: Não foi possível redefinir sua senha. Tente novamente.")
         },
       })
     } finally {
@@ -128,138 +133,65 @@ const ResetPasswordScreen: React.FC = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: "#f0f0f7" }]}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={50}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: "#000", fontSize: fontSize * 1.8 }]}>Redefinir Senha</Text>
-        </View>
+    <AuthLayout accessibilityLabel="Tela de redefinição de senha">
+      <Header title="Redefinir Senha" titleAccessibilityLabel="Redefinir Senha" />
 
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("../../assets/images/Logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-            accessibilityLabel="Logo IMADIO"
-          />
-        </View>
+      <AccessibilityInstructions screenName="resetPassword" />
 
-        {/* Componente de mensagem de status */}
-        <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
+      <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite sua nova senha..."
-            placeholderTextColor="#999"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            accessibilityLabel="Campo de nova senha"
-            accessibilityHint="Digite sua nova senha"
-            accessibilityState={{ disabled: isLoading }}
-            importantForAccessibility="yes"
-          />
-        </View>
+      <FormContainer accessibilityLabel="Formulário de redefinição de senha">
+        <FormInput
+          placeholder="Digite sua nova senha..."
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          accessibilityLabel="Campo de nova senha"
+          accessibilityHint="Digite sua nova senha com pelo menos 6 caracteres"
+          accessibilityState={{ disabled: isLoading }}
+          importantForAccessibility="yes"
+          error={passwordError}
+        />
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite a mesma senha..."
-            placeholderTextColor="#999"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            accessibilityLabel="Campo de confirmação de senha"
-            accessibilityHint="Digite novamente sua nova senha para confirmar"
-            accessibilityState={{ disabled: isLoading }}
-            importantForAccessibility="yes"
-          />
-        </View>
+        <FormInput
+          placeholder="Digite a mesma senha..."
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          accessibilityLabel="Campo de confirmação de senha"
+          accessibilityHint="Digite novamente sua nova senha para confirmar"
+          accessibilityState={{ disabled: isLoading }}
+          importantForAccessibility="yes"
+          error={confirmPasswordError}
+        />
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.primary, opacity: isLoading ? 0.7 : 1 }]}
+        <Button
+          role="button"
+          label="Alterar senha"
+          hint="Toque para confirmar a alteração de senha"
           onPress={handleResetPassword}
-          disabled={isLoading}
-          accessibilityLabel="Botão de alterar senha"
-          accessibilityHint="Toque para confirmar a alteração de senha"
-          accessibilityState={{ disabled: isLoading, busy: isLoading }}
-          accessibilityLiveRegion="polite"
         >
-          <Text style={styles.buttonText}>{isLoading ? "Alterando..." : "Alterar Senha"}</Text>
-        </TouchableOpacity>
+          <Text style={[styles.buttonText, {color: colors.text}]}>{isLoading ? "Alterando..." : "Alterar Senha"}</Text>
+        </Button>
 
-        <TouchableOpacity
+        <LinkButton
+          role="link"
+          label="Não possui conta? Faça o cadastro!"
+          hint="Toque para ir para a tela de cadastro"
           onPress={navigateToSignup}
-          style={styles.signupLink}
-          accessibilityLabel="Link para cadastro"
-          accessibilityHint="Toque para ir para a tela de cadastro"
-          accessibilityRole="link"
         >
           <Text style={styles.signupText}>Não possui conta? Faça o cadastro!</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
-      <WaveBalumBackground height={150} />
-    </KeyboardAvoidingView>
+        </LinkButton>
+      </FormContainer>
+    </AuthLayout>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 30,
-    paddingTop: 60,
-    paddingBottom: 100,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  title: {
-    fontWeight: "bold",
-    textAlign: "center",
-    lineHeight: 40,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  logo: {
-    width: 200,
-    height: 80,
-  },
-  inputContainer: {
-    marginBottom: 30,
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    paddingVertical: 10,
-    fontSize: 16,
-    color: "#000",
-  },
-  button: {
-    paddingVertical: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
   buttonText: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
-  },
-  signupLink: {
-    alignItems: "center",
-    marginTop: 10,
   },
   signupText: {
     color: "#000",
@@ -267,4 +199,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ResetPasswordScreen;
+export default ResetPasswordScreen

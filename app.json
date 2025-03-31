@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
-    "backgroundColor": "#000000",
+    "backgroundColor": "#eceaff",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,7 +15,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/jhopn.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#eceaff"
       }
     },
     "web": {
@@ -31,7 +31,7 @@
           "image": "./src/assets/images/jhopn.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#eceaff"
         }
       ],
       [

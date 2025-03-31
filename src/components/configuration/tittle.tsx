@@ -24,9 +24,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
+    fontFamily: "MontserratAlternativesMedium",
   },
   subtitle: {
     textAlign: 'center',
+    fontFamily: "MontserratAlternativesRegular",
   },
 });
 

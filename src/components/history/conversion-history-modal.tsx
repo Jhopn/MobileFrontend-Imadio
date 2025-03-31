@@ -70,7 +70,7 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
           </Text>
 
           <TouchableOpacity
-            style={[styles.button, { borderColor: colors.text }]}
+            style={[styles.button, { borderColor: colors.background, backgroundColor: colors.primary }]}
             onPress={onClose}
             accessibilityRole="button"
             accessibilityLabel="Fechar visualização"
@@ -79,7 +79,7 @@ const HistoryItemModal: React.FC<HistoryItemModalProps> = ({
             <Text 
               style={[
                 styles.buttonText, 
-                { color: colors.text, fontSize: fontSize }
+                { color: colors.background, fontSize: fontSize }
               ]}
             >
               Fechar
@@ -122,15 +122,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesMedium",
     marginBottom: 8,
   },
   date: {
     marginBottom: 8,
+    fontFamily: "MontserratAlternativesRegular",
   },
   convertedText: {
     textAlign: 'center',
     marginBottom: 24,
     paddingHorizontal: 10,
+    fontFamily: "MontserratAlternativesMedium",
   },
   button: {
     width: '100%',
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesMedium",
   },
 });
 

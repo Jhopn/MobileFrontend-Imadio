@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: 'bold',
     marginBottom: 16,
+    fontFamily: "MontserratAlternativesMedium",
   },
   currentThemeContainer: {
     marginBottom: 16,
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
   },
   currentThemeLabel: {
     fontWeight: 'bold',
+    fontFamily: "MontserratAlternativesRegular"
   },
   themePreview: {
     flexDirection: 'row',
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
   },
   schemeText: {
     flex: 1,
+    fontFamily: "MontserratAlternativesRegular",
   },
   checkContainer: {
     width: 24,
