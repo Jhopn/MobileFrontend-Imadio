@@ -1,14 +1,14 @@
 import type React from "react"
-import { useState, useEffect } from "react"
-import { Text, StyleSheet } from "react-native"
+import { useState, useEffect, useRef } from "react"
+import { Text, StyleSheet, SafeAreaView, AccessibilityInfo, Platform, KeyboardAvoidingView, ScrollView, View } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import { useRouter } from "expo-router"
 import { requestPasswordReset } from "@/src/server/api/api"
 import StatusMessage from "@/src/components/common/status-message"
-import AuthLayout from "@/src/components/common/auth-layout" 
-import Header from "@/src/components/common/header" 
-import FormInput from "@/src/components/common/form-input" 
-import FormContainer from "@/src/components/common/form-container" 
+import AuthLayout from "@/src/components/common/auth-layout"
+import Header from "@/src/components/common/header"
+import FormInput from "@/src/components/common/form-input"
+import FormContainer from "@/src/components/common/form-container"
 import LinkButton from "@/src/components/common/link-button"
 import Button from "@/src/components/common/button"
 import AccessibilityInstructions from "@/src/components/common/accessibility-instructions"
@@ -69,56 +69,99 @@ const ForgotPasswordScreen: React.FC = () => {
   }
 
   return (
-    <AuthLayout waveType="balum" accessibilityLabel="Tela de recuperação de senha">
-      <Header
-        title="Redefinir Senha"
-        description="Um email será enviado com um link para redefinir a senha da sua conta"
-        titleAccessibilityLabel="Redefinir Senha"
-        descriptionAccessibilityLabel="Um email será enviado com um link para redefinir a senha da sua conta"
-      />
-
-      <AccessibilityInstructions screenName="forgotPassword" />
-
-      <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
-
-      <FormContainer accessibilityLabel="Formulário de recuperação de senha">
-        <FormInput
-          placeholder="Digite seu email..."
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          accessibilityLabel="Campo de email"
-          accessibilityHint="Digite seu email para receber o link de redefinição de senha"
-          error={error}
-        />
-
-        <Button
-          role="button"
-          label="Enviar código"
-          hint="Toque para enviar o código de redefinição de senha para seu email"
-          onPress={handleSendCode}
+    <SafeAreaView
+      accessible={false}
+      accessibilityLabel="Tela de recuperação de senha"
+      accessibilityRole="text"
+      style={styles.safeArea}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoid}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          accessibilityLabel="Formulário de recuperação de senha"
+          accessibilityRole="text"
         >
-          {isLoading ? "Enviando..." : "Enviar Código"}
-        </Button>
+          <View  accessible={true} style={[styles.container, { backgroundColor: colors.background }]}>
+            <Header title="Redefinir Senha"/>
+            <View accessible={true}  style={styles.content} >
+              
+              <Text
+                style={styles.description}
+                accessibilityLabel="Adicione um email para que um código chegue ao seu email para redefinir a senha da sua conta"
+                accessibilityRole="text"
+                importantForAccessibility="yes"
+              >
+                Um email será enviado com um link para redefinir a senha da sua conta
+              </Text>
 
-        <LinkButton
-          role="link"
-          label="Não possui conta? Faça o cadastro!"
-          hint="Toque para ir para a tela de cadastro"
-          onPress={navigateToSignup}
-        >
-          Não possui conta? Faça o cadastro!
-        </LinkButton>
-      </FormContainer>
-    </AuthLayout>
+
+              <AccessibilityInstructions screenName="forgotPassword" />
+
+              <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
+
+            </View>
+            <FormContainer
+              accessibilityLabel="Formulário de recuperação de senha"
+            >
+              <FormInput
+                placeholder="Digite seu email..."
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel="Campo de email"
+                accessibilityHint="Digite seu email para receber o link de redefinição de senha"
+                error={error}
+                accessible={true}
+                importantForAccessibility="yes"
+              />
+
+              <Button
+                role="button"
+                label="Enviar código"
+                hint="Toque para enviar o código de redefinição de senha para seu email"
+                onPress={handleSendCode}
+              >
+                {isLoading ? "Enviando..." : "Enviar Código"}
+              </Button>
+
+              <LinkButton
+                role="link"
+                label="Não possui conta? Faça o cadastro!"
+                hint="Toque para ir para a tela de cadastro"
+                onPress={navigateToSignup}
+              >
+                Não possui conta? Faça o cadastro!
+              </LinkButton>
+            </FormContainer>
+          </View>
+          <AuthLayout waveType="balum" />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  headerMargin:{
-    marginBottom: 40 
+  safeArea: {
+    flex: 1,
+  },
+  headerMargin: {
+    marginBottom: 40
+  },
+  container: {
+    flex: 1,
+    paddingTop: '13%',
+    paddingHorizontal: 14,
+    alignItems: 'center',
+  },
+  content: {
+    alignItems: 'center',
   },
   buttonText: {
     color: "#fff",
@@ -130,6 +173,21 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 14,
     fontFamily: "MontserratAlternativesRegular",
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  description: {
+    textAlign: "center",
+    marginVertical: 20,
+    fontSize: 16,
+    color: "#333",
+    lineHeight: 22,
+    fontFamily: "MontserratAlternativesRegular",
+    paddingHorizontal: 20,
   },
 })
 

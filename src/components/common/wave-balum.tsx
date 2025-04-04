@@ -1,7 +1,7 @@
 import { useTheme } from '@react-navigation/native';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, AccessibilityProps } from 'react-native';
 
-interface PropsButton {
+interface PropsButton{
   color?: string;
 }
 const WaveBalumBackground: React.FC<PropsButton> = ({ color = '#9f90ff' }) => {

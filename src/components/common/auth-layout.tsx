@@ -1,5 +1,4 @@
-"use client"
-
+// src/components/auth/auth-layout.tsx
 import type React from "react"
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, type ViewStyle } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
@@ -7,7 +6,7 @@ import WaveBalumBackground from "@/src/components/common/wave-balum"
 import WaveSkateBackground from "@/src/components/common/wave-skate"
 
 interface AuthLayoutProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   waveType?: "balum" | "skate"
   contentStyle?: ViewStyle
   accessibilityLabel?: string
@@ -29,14 +28,30 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={50}
       accessibilityLabel={accessibilityLabel}
-      accessible={true}
+      accessible={false}
+      importantForAccessibility="no"
       testID={testID}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={[styles.content, contentStyle]}>{children}</View>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+        accessibilityElementsHidden={false}
+        importantForAccessibility="no"
+      >
+        <View 
+          style={[styles.content, contentStyle]}
+          accessibilityElementsHidden={false}
+          importantForAccessibility="no"
+        >
+          {children}
+        </View>
       </ScrollView>
 
-      {waveType === "balum" ? <WaveBalumBackground /> : <WaveSkateBackground />}
+      {waveType === "balum" ? (
+        <WaveBalumBackground/>
+      ) : (
+        <WaveSkateBackground/>
+      )}
     </KeyboardAvoidingView>
   )
 }
@@ -58,4 +73,3 @@ const styles = StyleSheet.create({
 })
 
 export default AuthLayout
-

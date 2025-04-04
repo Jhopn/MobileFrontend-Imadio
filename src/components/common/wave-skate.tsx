@@ -1,9 +1,12 @@
 // components/WaveSkateBackground.jsx
 import { useTheme } from '@react-navigation/native';
-import { View, Image } from 'react-native';
+import { View, Image, AccessibilityProps } from 'react-native';
 
-const WaveSkateBackground = () => {
-  const { colors } = useTheme();
+interface PropsButton extends AccessibilityProps {
+  color?: string;
+}
+
+const WaveSkateBackground: React.FC<PropsButton>  = ({color = '#9f90ff'}) => {
   
   return (
     <View style={{ 
@@ -14,7 +17,9 @@ const WaveSkateBackground = () => {
       height: '100%',
       zIndex: -1
     }}>
-          <Image source={require("../../assets/images/background/skate.png")}/>
+          <Image style={{
+        tintColor: color,
+      }} source={require("../../assets/images/background/skate.png")} />
     </View>
   );
 };

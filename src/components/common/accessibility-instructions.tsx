@@ -11,7 +11,6 @@ const AccessibilityInstructions: React.FC<AccessibilityInstructionsProps> = ({ s
   const { colors, fontSize } = useTheme()
   const [modalVisible, setModalVisible] = useState(false)
 
-  // Instruções específicas para cada tela
   const getInstructions = () => {
     switch (screenName) {
       case "login":
