@@ -1,20 +1,20 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Text, StyleSheet } from "react-native"
+import { Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView, Platform, View } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import { useRouter, useLocalSearchParams } from "expo-router"
 import { verifyCode } from "@/src/server/api/api"
 import StatusMessage from "@/src/components/common/status-message"
 import Button from "@/src/components/common/button"
-import AuthLayout from "@/src/components/common/auth-layout" 
-import Header from "@/src/components/common/header" 
-import FormContainer from "@/src/components/common/form-container" 
-import CodeInputGroup from "@/src/components/verify-code/code-input" 
+import AuthLayout from "@/src/components/common/auth-layout"
+import FormContainer from "@/src/components/common/form-container"
+import CodeInputGroup from "@/src/components/verify-code/code-input"
 import LinkButton from "@/src/components/common/link-button"
 import AccessibilityInstructions from "@/src/components/common/accessibility-instructions"
+import ImadioLogo from "@/src/components/common/logo-imadio"
 
 const VerifyCodeScreen: React.FC = () => {
-  const { colors } = useTheme()
+  const { colors, fontSize } = useTheme()
   const router = useRouter()
   const params = useLocalSearchParams()
   const email = (params.email as string) || ""
@@ -74,43 +74,78 @@ const VerifyCodeScreen: React.FC = () => {
   }
 
   return (
-    <AuthLayout accessibilityLabel="Tela de verificação de código">
-      <Header title="Verificar Código" titleAccessibilityLabel="Verificar Código"/>
-
-      <AccessibilityInstructions screenName="verifyCode" />
-
-      <Text
-        style={styles.description}
-        accessibilityLabel={`Digite o código de 4 dígitos enviado para ${email || "seu email"}`}
-        accessibilityRole="text"
+    <SafeAreaView
+      accessible={false}
+      accessibilityLabel="Tela de recuperação de senha"
+      accessibilityRole="text"
+      style={styles.safeArea}
+    >
+      <KeyboardAvoidingView
+        style={[styles.keyboardAvoid, { backgroundColor: colors.background } ]}
       >
-        Digite o código de 4 dígitos enviado para {email || "seu email"}
-      </Text>
-
-      <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
-
-      <FormContainer accessibilityLabel="Formulário de verificação de código">
-        <CodeInputGroup code={code} onChange={setCode} onComplete={handleVerifyCode} disabled={isLoading} />
-
-        <Button
-          role="button"
-          label="Verificar código"
-          hint="Toque para verificar o código e prosseguir para redefinição de senha"
-          onPress={() => handleVerifyCode()}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          accessibilityLabel="Formulário de verificação de código"
+          accessibilityRole="text"
         >
-          {isLoading ? "Verificando..." : "Verificar"}
-        </Button>
+          <View accessible={true} style={styles.container}>
 
-        <LinkButton
-          role="link"
-          label="Reenviar código"
-          hint="Toque para receber um novo código por email"
-          onPress={handleResendCode}
-        >
-          Não recebeu o código? Reenviar
-        </LinkButton>
-      </FormContainer>
-    </AuthLayout>
+            <View
+              accessible={true}
+              accessibilityLabel="Formulário de verificação de código"
+              accessibilityRole="text"
+            >
+              <Text
+                style={[styles.title, { fontSize: fontSize * 2  }]}
+                accessibilityRole="text"
+                accessibilityLabel="Verificar Código"
+              >
+                Verificar Código
+              </Text>
+
+              <ImadioLogo />
+            </View>
+
+
+            <AccessibilityInstructions screenName="verifyCode" />
+
+            <Text
+              style={styles.description}
+              accessibilityLabel={`Digite o código de 4 dígitos enviado para ${email || "seu email"}`}
+              accessibilityRole="text"
+            >
+              Digite o código de 4 dígitos enviado para {email || "seu email"}
+            </Text>
+
+            <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
+
+            <FormContainer accessibilityLabel="Formulário de verificação de código">
+              <CodeInputGroup code={code} onChange={setCode} onComplete={handleVerifyCode} disabled={isLoading} />
+
+              <Button
+                role="button"
+                label="Verificar código"
+                hint="Toque para verificar o código e prosseguir para redefinição de senha"
+                onPress={() => handleVerifyCode()}
+              >
+                {isLoading ? "Verificando..." : "Verificar"}
+              </Button>
+
+              <LinkButton
+                role="link"
+                label="Reenviar código"
+                hint="Toque para receber um novo código por email"
+                onPress={handleResendCode}
+              >
+                Não recebeu o código? Reenviar
+              </LinkButton>
+            </FormContainer>
+          </View>
+          <AuthLayout waveType="balum" />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
@@ -122,6 +157,27 @@ const styles = StyleSheet.create({
     color: "#333",
     lineHeight: 22,
     fontFamily: "MontserratAlternativesMedium",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  container: {
+    flex: 1,
+    paddingTop: '13%',
+    paddingHorizontal: 14,
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 40,
+    fontFamily: "MontserratAlternativesRegular"
   },
   resendText: {
     fontSize: 14,

@@ -28,7 +28,7 @@ const HowToUseScreen: React.FC = () => {
         <View style={styles.content}>
           <Text
             style={[styles.title, { color: colors.text, fontSize: fontSize * 2 }]}
-            accessibilityRole="header"
+            accessibilityRole="text"
           >
             Como Usar?
           </Text>

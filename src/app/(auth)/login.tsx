@@ -92,7 +92,6 @@ const LoginScreen = () => {
   return (
     <SafeAreaView style={styles.container} accessible={true} accessibilityLabel="Tela de login">
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
       >
         <ScrollView 

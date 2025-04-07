@@ -1,6 +1,6 @@
 // src/components/auth/auth-layout.tsx
 import type React from "react"
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, type ViewStyle } from "react-native"
+import { Platform, ScrollView, StyleSheet, View, type ViewStyle } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import WaveBalumBackground from "@/src/components/common/wave-balum"
 import WaveSkateBackground from "@/src/components/common/wave-skate"
@@ -23,10 +23,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   const { colors } = useTheme()
 
   return (
-    <KeyboardAvoidingView
+    <View
       style={[styles.container, { backgroundColor: colors.background }]}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={50}
       accessibilityLabel={accessibilityLabel}
       accessible={false}
       importantForAccessibility="no"
@@ -52,13 +50,14 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       ) : (
         <WaveSkateBackground/>
       )}
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex: -10
   },
   scrollContent: {
     flexGrow: 1,
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 30,
     paddingTop: 60,
-    paddingBottom: 100,
+    paddingBottom: '14%',
   },
 })
 

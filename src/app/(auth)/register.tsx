@@ -97,7 +97,6 @@ const SignupForm = () => {
       setStatusType('success');
       setShowStatus(true);
 
-      // Limpa o formulário após sucesso
       setFormData({
         name: '',
         email: '',
@@ -119,7 +118,6 @@ const SignupForm = () => {
   return (
     <SafeAreaView style={styles.container} accessible={true} accessibilityLabel="Tela de cadastro">
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
       >
         <ScrollView

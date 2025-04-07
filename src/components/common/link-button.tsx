@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 100
   },
   text: {
     marginTop: 16,

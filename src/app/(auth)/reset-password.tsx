@@ -1,23 +1,23 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Text, StyleSheet, Alert, AccessibilityInfo, Platform } from "react-native"
+import { Text, StyleSheet, Alert, AccessibilityInfo, Platform, SafeAreaView, KeyboardAvoidingView, ScrollView, View } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import { useRouter, useLocalSearchParams } from "expo-router"
 import { resetPassword } from "@/src/server/api/api"
 import StatusMessage from "@/src/components/common/status-message"
-import AuthLayout from "@/src/components/common/auth-layout" 
-import Header from "@/src/components/common/header" 
-import FormInput from "@/src/components/common/form-input" 
-import FormContainer from "@/src/components/common/form-container" 
-import AccessibilityInstructions from "@/src/components/common/accessibility-instructions" 
+import AuthLayout from "@/src/components/common/auth-layout"
+import Header from "@/src/components/common/header"
+import FormInput from "@/src/components/common/form-input"
+import FormContainer from "@/src/components/common/form-container"
+import AccessibilityInstructions from "@/src/components/common/accessibility-instructions"
 import LinkButton from "@/src/components/common/link-button"
 import Button from "@/src/components/common/button"
+import ImadioLogo from "@/src/components/common/logo-imadio"
 
 const ResetPasswordScreen: React.FC = () => {
-  const { colors } = useTheme()
+  const { colors, fontSize } = useTheme()
   const router = useRouter()
   const params = useLocalSearchParams()
-  const token = params.token as string
 
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -133,57 +133,91 @@ const ResetPasswordScreen: React.FC = () => {
   }
 
   return (
-    <AuthLayout accessibilityLabel="Tela de redefinição de senha">
-      <Header title="Redefinir Senha" titleAccessibilityLabel="Redefinir Senha" />
-
-      <AccessibilityInstructions screenName="resetPassword" />
-
-      <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
-
-      <FormContainer accessibilityLabel="Formulário de redefinição de senha">
-        <FormInput
-          placeholder="Digite sua nova senha..."
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          accessibilityLabel="Campo de nova senha"
-          accessibilityHint="Digite sua nova senha com pelo menos 6 caracteres"
-          accessibilityState={{ disabled: isLoading }}
-          importantForAccessibility="yes"
-          error={passwordError}
-        />
-
-        <FormInput
-          placeholder="Digite a mesma senha..."
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          accessibilityLabel="Campo de confirmação de senha"
-          accessibilityHint="Digite novamente sua nova senha para confirmar"
-          accessibilityState={{ disabled: isLoading }}
-          importantForAccessibility="yes"
-          error={confirmPasswordError}
-        />
-
-        <Button
-          role="button"
-          label="Alterar senha"
-          hint="Toque para confirmar a alteração de senha"
-          onPress={handleResetPassword}
+    <SafeAreaView
+      accessible={false}
+      accessibilityLabel="Tela de recuperação de senha"
+      accessibilityRole="text"
+      style={styles.safeArea}
+    >
+      <KeyboardAvoidingView
+        style={[styles.keyboardAvoid, { backgroundColor: colors.background }]}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          accessibilityLabel="Formulário de troca de senha"
+          accessibilityRole="text"
         >
-          {isLoading ? "Alterando..." : "Alterar Senha"}
-        </Button>
+          <View accessible={true} style={styles.container}>
 
-        <LinkButton
-          role="link"
-          label="Não possui conta? Faça o cadastro!"
-          hint="Toque para ir para a tela de cadastro"
-          onPress={navigateToSignup}
-        >
-         Não possui conta? Faça o cadastro!
-        </LinkButton>
-      </FormContainer>
-    </AuthLayout>
+            <View
+              accessible={true}
+              accessibilityLabel="Formulário de troca de senha"
+              accessibilityRole="text"
+            >
+              <Text
+                style={[styles.title, { fontSize: fontSize * 2 }]}
+                accessibilityRole="text"
+                accessibilityLabel="Redefinir Senha"
+              >
+                Redefinir Senha
+              </Text>
+
+              <ImadioLogo/>
+            </View>
+            
+            <AccessibilityInstructions screenName="resetPassword" />
+
+            <StatusMessage type={statusType} message={statusMessage} visible={showStatus} />
+
+            <FormContainer accessibilityLabel="Formulário de redefinição de senha">
+              <FormInput
+                placeholder="Digite sua nova senha..."
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                accessibilityLabel="Campo de nova senha"
+                accessibilityHint="Digite sua nova senha com pelo menos 6 caracteres"
+                accessibilityState={{ disabled: isLoading }}
+                importantForAccessibility="yes"
+                error={passwordError}
+              />
+
+              <FormInput
+                placeholder="Digite a mesma senha..."
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                accessibilityLabel="Campo de confirmação de senha"
+                accessibilityHint="Digite novamente sua nova senha para confirmar"
+                accessibilityState={{ disabled: isLoading }}
+                importantForAccessibility="yes"
+                error={confirmPasswordError}
+              />
+
+              <Button
+                role="button"
+                label="Alterar senha"
+                hint="Toque para confirmar a alteração de senha"
+                onPress={handleResetPassword}
+              >
+                {isLoading ? "Alterando..." : "Alterar Senha"}
+              </Button>
+
+              <LinkButton
+                role="link"
+                label="Não possui conta? Faça o cadastro!"
+                hint="Toque para ir para a tela de cadastro"
+                onPress={navigateToSignup}
+              >
+                Não possui conta? Faça o cadastro!
+              </LinkButton>
+            </FormContainer>
+          </View>
+          <AuthLayout waveType="balum" />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
@@ -198,6 +232,27 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 14,
     fontFamily: "MontserratAlternativesRegular",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  container: {
+    flex: 1,
+    paddingTop: '13%',
+    paddingHorizontal: 14,
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 40,
+    fontFamily: "MontserratAlternativesRegular"
   },
 })
 

@@ -1,20 +1,20 @@
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { Text, StyleSheet, SafeAreaView, AccessibilityInfo, Platform, KeyboardAvoidingView, ScrollView, View } from "react-native"
+import { useState, useEffect } from "react"
+import { Text, StyleSheet, SafeAreaView, Platform, KeyboardAvoidingView, ScrollView, View } from "react-native"
 import { useTheme } from "@/src/hooks/use-theme"
 import { useRouter } from "expo-router"
 import { requestPasswordReset } from "@/src/server/api/api"
 import StatusMessage from "@/src/components/common/status-message"
 import AuthLayout from "@/src/components/common/auth-layout"
-import Header from "@/src/components/common/header"
 import FormInput from "@/src/components/common/form-input"
 import FormContainer from "@/src/components/common/form-container"
 import LinkButton from "@/src/components/common/link-button"
 import Button from "@/src/components/common/button"
 import AccessibilityInstructions from "@/src/components/common/accessibility-instructions"
+import ImadioLogo from "@/src/components/common/logo-imadio"
 
 const ForgotPasswordScreen: React.FC = () => {
-  const { colors } = useTheme()
+  const { colors, fontSize } = useTheme()
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -76,8 +76,7 @@ const ForgotPasswordScreen: React.FC = () => {
       style={styles.safeArea}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoid}
+        style={[styles.keyboardAvoid, , { backgroundColor: colors.background }]}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -85,10 +84,27 @@ const ForgotPasswordScreen: React.FC = () => {
           accessibilityLabel="Formulário de recuperação de senha"
           accessibilityRole="text"
         >
-          <View  accessible={true} style={[styles.container, { backgroundColor: colors.background }]}>
-            <Header title="Redefinir Senha"/>
-            <View accessible={true}  style={styles.content} >
-              
+          <View accessible={true} style={styles.container}>
+
+            <View
+              accessible={true}
+              accessibilityLabel="Tela de redefinição de senha"
+              accessibilityRole="text"
+            >
+              <Text
+                style={[styles.title, {fontSize: fontSize * 2 }]}
+                accessibilityRole="text"
+                accessibilityLabel="Redefinir Senha"
+              >
+                Redefinir Senha
+              </Text>
+
+              <ImadioLogo />
+            </View>
+
+
+            <View accessible={true} style={styles.content} >
+
               <Text
                 style={styles.description}
                 accessibilityLabel="Adicione um email para que um código chegue ao seu email para redefinir a senha da sua conta"
@@ -159,6 +175,12 @@ const styles = StyleSheet.create({
     paddingTop: '13%',
     paddingHorizontal: 14,
     alignItems: 'center',
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 40,
+    fontFamily: "MontserratAlternativesRegular"
   },
   content: {
     alignItems: 'center',

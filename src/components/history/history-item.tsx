@@ -4,6 +4,7 @@ import { HistoryItemPropsOnPress } from './interfaces/schemas';
 import { useTheme } from '@/src/hooks/use-theme';
 import { Trash2 } from 'react-native-feather'; // Importando ícone de lixeira
 import { formatDate } from '@/src/util/commom';
+import ButtonPrimary from '../common/button-primary';
 
 // Atualizar a interface para incluir a função onDelete
 interface HistoryItemProps extends HistoryItemPropsOnPress {
@@ -23,8 +24,8 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
           text: "Cancelar",
           style: "cancel"
         },
-        { 
-          text: "Excluir", 
+        {
+          text: "Excluir",
           onPress: () => onDelete(item.id),
           style: "destructive"
         }
@@ -33,9 +34,10 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background, borderColor: colors.primary }]}>
+      
       <TouchableOpacity
-        style={[styles.historyItem, { backgroundColor: colors.background, borderColor: colors.primary }]}
+        style={styles.historyItem}
         onPress={() => onPress(item)}
         accessible
         accessibilityRole="button"
@@ -50,13 +52,13 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
           accessibilityLabel={`Imagem relacionada à descrição: ${item.convertedText}`}
         />
         <View style={styles.itemContent}>
-          <Text 
+          <Text
             style={[styles.date, { color: colors.primary, fontSize: fontSize * 0.8 }]}
             accessibilityRole="text"
           >
             {formatDate(item.createdAt)}
           </Text>
-          <Text 
+          <Text
             style={[styles.convertedText, { color: colors.text, fontSize: fontSize * 0.9 }]}
             accessibilityRole="text"
             numberOfLines={2}
@@ -66,17 +68,17 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item, onPress, onDelete }) =>
           </Text>
         </View>
       </TouchableOpacity>
-      
-      <TouchableOpacity
-        style={[styles.deleteButton, { backgroundColor: colors.primary }]}
+
+
+      <View>
+      <ButtonPrimary
         onPress={handleDelete}
-        accessible
-        accessibilityRole="button"
-        accessibilityLabel="Excluir item"
-        accessibilityHint="Toque para excluir este item do histórico"
-      >
+        role='button'
+        label='Excluir conversão'
+        hint='Toque para excluir este item do histórico relacionada à descrição: ${item.convertedText}' >
         <Trash2 width={16} height={16} color="#fff" />
-      </TouchableOpacity>
+      </ButtonPrimary>
+      </View>
     </View>
   );
 };
@@ -85,18 +87,19 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     marginBottom: 16,
-  },
-  historyItem: {
-    borderRadius: 20,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
     borderWidth: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    borderRadius: 20,
     elevation: 3,
+    alignItems: 'center',
+    padding: '2%'
+  },
+  historyItem: {
+    padding: 12,
+    flexDirection: 'row',
   },
   thumbnail: {
     width: 80,
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   itemContent: {
     flex: 1,
     marginLeft: 12,
-    marginRight: 30, 
+    marginRight: 30,
   },
   date: {
     marginBottom: 4,
@@ -116,17 +119,6 @@ const styles = StyleSheet.create({
   convertedText: {
     lineHeight: 22,
     fontFamily: "MontserratAlternativesRegular",
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
   },
 });
 
